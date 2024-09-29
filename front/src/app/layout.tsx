@@ -5,9 +5,8 @@ import { getProducts } from "@/helpers/product.helper";
 import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
 import ShowComponent from "@/components/ShowComponent/ShowComponent";
-import IProduct from "@/interfaces/Products";
 import "./globals.css";
-
+import AsideList from "@/components/AsideList/AsideList";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -41,6 +40,7 @@ export default async function RootLayout({
         <LogginProvider>
           <ShowComponent>
             <NavBar images={images} />
+            <AsideList  />
           </ShowComponent>
           {children}
           <Footer />

@@ -1,4 +1,4 @@
-interface IProduct{
+export default interface IProduct{
     id:string;
     name:string;
     description:string;
@@ -7,4 +7,10 @@ interface IProduct{
     categoryId:string;
 }
 
-export default IProduct;
+
+export default interface ICategory{
+    id:string;
+    name:string;
+    
+}
+
