@@ -1,6 +1,7 @@
 "use client";
+
 import { registerUser } from "@/helpers/auth.helper";
-import { validateLogin, validateRegisterLogin } from "@/helpers/validate";
+import { validateRegisterLogin } from "@/helpers/validate";
 import { IRegister, TRegisterError } from "@/interfaces/LoginRegister";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -12,11 +13,13 @@ const Register = () => {
     email: "",
     age: 0,
     password: "",
+    passwordConfirm: "",
     phone: 0,
     address: "",
     city: "",
     admin: false,
   };
+
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
@@ -26,45 +29,67 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
-
-    const newValue = name === "age" || name === "phone" ? (value ? Number(value) : "") : value;
+    const newValue =
+      name === "age" || name === "phone" ? (value ? Number(value) : "") : value;
 
     setData((prevState) => ({
-        ...prevState,
-        [name]: newValue,
+      ...prevState,
+      [name]: newValue,
     }));
-};
+
+    if (isSubmitted) {
+      const updatedErrors = validateRegisterLogin({
+        ...dataUser,
+        [name]: newValue,
+      });
+
+      if (updatedErrors.password !== dataUser.passwordConfirm) {
+        updatedErrors.passwordConfirm = "Password no Coinciden";
+      }
+
+      setError(updatedErrors);
+    }
+  };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); 
+    event.preventDefault();
+    setIsSubmitted(true);
+
+    const validationErrors = validateRegisterLogin(dataUser);
+
+    if (dataUser.password !== dataUser.passwordConfirm) {
+      validationErrors.passwordConfirm = "Password no Coinciden";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+      return;
+    }
 
     try {
-        const response = await registerUser(dataUser); 
-        console.log('Usuario registrado:', response); 
+      const response = await registerUser(dataUser);
+      console.log("Usuario Registrado Ingresa con tus Datos:", response);
     } catch (error: any) {
-        console.error(error); 
+      console.error(error);
 
-        
-        const errorMessage = error.message || "An unexpected error occurred during registration.";
+      const errorMessage =
+        error.message || "Se produjo un error inesperado durante el registro.";
 
-        
-        setModalContent({
-            title: "Error",
-            message: errorMessage,
-        });
-        setShowModal(true); 
+      setModalContent({
+        title: "Error",
+        message: errorMessage,
+      });
+      setShowModal(true);
     }
-};
-
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -72,20 +97,21 @@ const Register = () => {
   };
 
   useEffect(() => {
-    const validationErrors = validateRegisterLogin(dataUser);
-    
+    if (isSubmitted) {
+      const validationErrors = validateRegisterLogin(dataUser);
 
-    if (dataUser.password !== dataUser.passwordConfirm) {
-      validationErrors.password = "Las contraseñas no coinciden.";
+      if (dataUser.password !== dataUser.passwordConfirm) {
+        validationErrors.passwordConfirm = "Password no Coinciden.";
+      }
+
+      setError(validationErrors);
     }
-
-    setError(validationErrors);
-  }, [dataUser]);
+  }, [dataUser, isSubmitted]);
 
   return (
     <div>
       <div className="text-center text-green-900 font-bold mb-5">
-        <h1>Register In JhonDay your Store Technology</h1>
+        <h1>Registro en Soluciones JhonDay Tus Servicios Tenológicos</h1>
       </div>
 
       <form
@@ -95,9 +121,9 @@ const Register = () => {
         <div className="mb-5">
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-green-900"
           >
-            Your email
+            Correo Electrónico
           </label>
           <input
             type="email"
@@ -105,18 +131,20 @@ const Register = () => {
             name="email"
             value={dataUser.email}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="name@xxx.com"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="nombreCorreo@xxx.com"
             required
           />
-          {error.email && <span className="text-red-600">{error.email}</span>}
+          {isSubmitted && error.email && (
+            <span className="text-red-600">{error.email}</span>
+          )}
         </div>
         <div className="mb-5 relative">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-green-900"
           >
-            Your password
+            Tu Password
           </label>
           <input
             type={showPassword ? "text" : "password"}
@@ -124,8 +152,8 @@ const Register = () => {
             name="password"
             value={dataUser.password}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10" // Añade espacio para el botón
-            placeholder="********"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="8 Caractéres, Minímo => 1 letra Máyuscula, 1 Letra Minúscula,1 Numero, 1 Digito Especial "
             required
           />
           <button
@@ -172,7 +200,7 @@ const Register = () => {
               </svg>
             )}
           </button>
-          {error.password && (
+          {isSubmitted && error.password && (
             <span className="text-red-600">{error.password}</span>
           )}
         </div>
@@ -181,7 +209,7 @@ const Register = () => {
             htmlFor="passwordConfirm"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Confirm Your password
+            Confirma Tu password
           </label>
           <input
             type={showPassword ? "text" : "passwordConfirm"}
@@ -246,7 +274,7 @@ const Register = () => {
             htmlFor="name"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Your Name Complete
+            Tu Nombre Comleto
           </label>
           <input
             type="text"
@@ -255,7 +283,7 @@ const Register = () => {
             value={dataUser.name}
             onChange={handleChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Name and second name"
+            placeholder="Nombre(s) y Apellido(s)"
             required
           />
           {error.name && <span className="text-red-600">{error.name}</span>}
@@ -266,7 +294,7 @@ const Register = () => {
             htmlFor="age  "
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Age
+            Edad
           </label>
           <input
             type="text"
@@ -286,7 +314,7 @@ const Register = () => {
             htmlFor="phone"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Phone Cel
+            Teléfono de Contacto
           </label>
           <input
             type="text"
@@ -306,7 +334,7 @@ const Register = () => {
             htmlFor="city"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            City
+            Ciudad
           </label>
           <input
             type="text"
@@ -326,7 +354,7 @@ const Register = () => {
             htmlFor="address"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Address
+            Dirección
           </label>
           <input
             type="text"
@@ -335,7 +363,7 @@ const Register = () => {
             value={dataUser.address}
             onChange={handleChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Full your Address City Street ..."
+            placeholder="Tu Dirección Completa Estado Calle Carrera  ..."
             required
           />
           {error.address && (
@@ -359,15 +387,15 @@ const Register = () => {
             Remember me
           </label>
         </div>
+
         <button
           disabled={Object.values(error).some((err) => err)}
           type="submit"
-          className={`mb-2 text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
-    ${
-      Object.values(error).some((err) => err)
-        ? "bg-gray-400 cursor-not-allowed"
-        : "bg-green-900 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-    }`}
+          className={`mb-2 text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
+            Object.values(error).some((err) => err)
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-900 hover:bg-green-500"
+          }`}
         >
           Submit
         </button>

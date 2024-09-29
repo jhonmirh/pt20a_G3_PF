@@ -3,8 +3,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { userSession } from "@/interfaces/LoginRegister";
 import IProduct from "@/interfaces/Products";
 import AlertModal from "../Alert/AlertModal";
+import ICategory from "@/interfaces/Category";
 
-const AddAppointment = ({ product }: { product: IProduct }) => {
+const AddAppointment = ({ category }: { category: ICategory }) => {
   const [showNavigation, setShowNavigation] = useState<userSession | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
@@ -35,8 +36,8 @@ const AddAppointment = ({ product }: { product: IProduct }) => {
     }
 
     try {
-      const appointment: IProduct[] = JSON.parse(localStorage.getItem("appointment") || "[]");
-      const isProductInApp = appointment.some((p) => p.id === product.id);
+      const appointment: ICategory[] = JSON.parse(localStorage.getItem("appointment") || "[]");
+      const isProductInApp = appointment.some((p) => p.id === category.id);
 
       if (isProductInApp) {
         setModalContent({
@@ -45,7 +46,7 @@ const AddAppointment = ({ product }: { product: IProduct }) => {
         });
         setShowModal(true);
       } else {
-        appointment.push(product);
+        appointment.push(category);
         localStorage.setItem("appointment", JSON.stringify(appointment));
         setModalContent({
           title: "Agregado Satisfactoriamente",
@@ -70,7 +71,7 @@ const AddAppointment = ({ product }: { product: IProduct }) => {
 
   return (
     <>
-      {showNavigation?.token && pathname !== "/appointment" && pathname !== "/dashboard/orders" && (
+      {/* {showNavigation?.token && pathname !== "/appointment" && pathname !== "/dashboard/orders" && ( */}
         <div 
           onClick={handleClick} 
           title="Add Appointment" 
@@ -99,7 +100,8 @@ const AddAppointment = ({ product }: { product: IProduct }) => {
             message={modalContent.message}
           />
         </div>
-      )}
+      {/* ) */}
+      {/* // } */}
     </>
   );
 };

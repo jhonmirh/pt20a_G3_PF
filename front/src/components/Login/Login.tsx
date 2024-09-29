@@ -26,51 +26,6 @@ const Login = () => {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
- 
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   try {
-  //     const response = await loginUser(dataUser);
-  //     if (response.error) {
-  //       const errorMessage = response.error.message || 'Unknown error';
-  //       setModalContent({
-  //         title: "Error",
-  //         message: errorMessage,
-  //       });
-  //       setShowModal(true);
-  //       return;
-  //     }
-  //     const { token, user } = response;
-  //     if (!user) {
-  //       throw new Error('User not found');
-  //     }
-  //     const userData = {
-  //       id: user.id,
-  //       name: user.name,
-  //       age:user.age,
-  //       address: user.address,
-  //       phone: user.phone,
-  //       email: user.email,
-  //       password:user.password,
-  //       city:user.city,
-  //       orders: user.orders,
-  //     };
-  //     setUserData({ token, userData });
-  //     console.log(userData);
-  //     setModalContent({
-  //       title: "Welcome! You can now shop at JhonDay",
-  //       message: "Successfully Logged In",
-  //     });
-  //     setShowModal(true);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setModalContent({
-  //       title: "Error",
-  //       message: "An unexpected error occurred",
-  //     });
-  //     setShowModal(true);
-  //   }
-  // };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 
@@ -81,10 +36,9 @@ const Login = () => {
       
       const { user, token } = response;
       if (!user) {
-        throw new Error('User not found'); 
+        throw new Error('Usuario no Registrado'); 
       }
   
-      // Create a new userData object with the correct properties
       const userData = {
         id: user.id,
         name: user.name,
@@ -96,24 +50,23 @@ const Login = () => {
         city: user.city,
         orders: user.orders,
       };
-  
-      // Remove the password from the userData object
+
       delete userData.password;
   
       setUserData({ token, userData });
   
       setModalContent({
-        title: "Welcome! You can now shop at JhonDay",
-        message: "Successfully Logged In",
+        title: "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
+        message: "Satisfactoriamente Logueado",
       });
       setShowModal(true);
     } catch (error: any) {
-      console.error('Error during login:', error); // Log para desarrolladores
+      console.error('Error durante el Login:', error); 
   
-      // Muestra un mensaje en el modal si hay un error
+
       setModalContent({
         title: "Error",
-        message: error.message || "An unexpected error occurred during login.",
+        message: error.message || "Un Inesperado Error a Sucedido durante el Login.",
       });
       setShowModal(true);
     }
@@ -149,7 +102,7 @@ if(userData?.token){
   return (
     <div>
       <div className="text-center text-green-900 font-bold mb-5">
-        <h1>Sign In To JhonDay your Store Technology</h1>
+        <h1>Ingresar en JhonDay Servicios Tecnológicos</h1>
       </div>
 
       <form
@@ -161,7 +114,7 @@ if(userData?.token){
             htmlFor="email"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Your email
+            Correo Electrónico
           </label>
           <input
             type="email"
@@ -182,7 +135,7 @@ if(userData?.token){
             htmlFor="password"
             className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
           >
-            Your password
+            Tu Password
           </label>
           <input
             type={showPassword ? "text" : "password"}
@@ -268,7 +221,7 @@ if(userData?.token){
         : "bg-green-900 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     }`}
         >
-          Submit
+          Ingresar
         </button>
       </form>
 

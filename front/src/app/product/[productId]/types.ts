@@ -6,7 +6,7 @@ export interface DetailProductProps {
       price:number;
       stock:number;
       image:string;
-      categoryId:number;
+      categoryId:string;
     };
   }
 
