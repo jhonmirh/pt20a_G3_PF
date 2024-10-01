@@ -1,5 +1,4 @@
 "use client";
-
 import { registerUser } from "@/helpers/auth.helper";
 import { validateRegisterLogin } from "@/helpers/validate";
 import { IRegister, TRegisterError } from "@/interfaces/LoginRegister";
@@ -23,11 +22,15 @@ const Register = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
+
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
   const [dataUser, setData] = useState<IRegister>(startState);
   const [error, setError] = useState<TRegisterError>({
     email: "",
     password: "",
+    passwordConfirm: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -57,6 +60,10 @@ const Register = () => {
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const toggleShowPasswordConfirm = () => {
+    setShowPasswordConfirm(!showPasswordConfirm);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -109,19 +116,21 @@ const Register = () => {
   }, [dataUser, isSubmitted]);
 
   return (
-    <div>
-      <div className="text-center text-green-900 font-bold mb-5">
-        <h1>Registro en Soluciones JhonDay Tus Servicios Tenológicos</h1>
+    <div className="flex flex-col items-center justify-center w-full">
+      <div className="text-center text-green-900 font-bold mt-5 mb-5">
+        <h1 className="text-3xl font-bold text-gray-900 shadow-gray-900/50 shadow-md mb-4">
+          Registro en Soluciones JhonDay Servicios Tenológicos
+        </h1>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="mb-5 rounded-md max-w-sm mx-auto shadow-lg border border-green-800 p-5"
+        className="w-full max-w-lg mb-3 rounded-md mx-auto shadow-lg border border-gray-900 p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:max-w-md sm:max-w-sm"
       >
         <div className="mb-5">
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-bold text-green-900"
+            className="block mb-2 text-sm font-bold text-gray-900"
           >
             Correo Electrónico
           </label>
@@ -139,6 +148,7 @@ const Register = () => {
             <span className="text-red-600">{error.email}</span>
           )}
         </div>
+
         <div className="mb-5 relative">
           <label
             htmlFor="password"
@@ -204,15 +214,16 @@ const Register = () => {
             <span className="text-red-600">{error.password}</span>
           )}
         </div>
+
         <div className="mb-5 relative">
           <label
             htmlFor="passwordConfirm"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
           >
             Confirma Tu password
           </label>
           <input
-            type={showPassword ? "text" : "passwordConfirm"}
+            type={showPasswordConfirm ? "text" : "password"}
             id="passwordConfirm"
             name="passwordConfirm"
             value={dataUser.passwordConfirm}
@@ -223,11 +234,11 @@ const Register = () => {
           />
           <button
             type="button"
-            onClick={toggleShowPassword}
+            onClick={toggleShowPasswordConfirm}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
             style={{ marginRight: "0.5rem", marginTop: "1.7rem" }}
           >
-            {showPassword ? (
+            {showPasswordConfirm ? (
               <svg
                 className="h-5 w-5 text-gray-500"
                 fill="none"
@@ -269,12 +280,13 @@ const Register = () => {
             <span className="text-red-600">{error.passwordConfirm}</span>
           )}
         </div>
+
         <div className="mb-5">
           <label
             htmlFor="name"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
           >
-            Tu Nombre Comleto
+            Tu Nombre Completo
           </label>
           <input
             type="text"
@@ -302,7 +314,7 @@ const Register = () => {
             name="age"
             value={dataUser.age}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus :ring-blue-500 dark:focus:border-blue-500"
             placeholder="Only numbers greater than 18"
             required
           />
@@ -332,7 +344,7 @@ const Register = () => {
         <div className="mb-5">
           <label
             htmlFor="city"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
           >
             Ciudad
           </label>
@@ -343,7 +355,7 @@ const Register = () => {
             value={dataUser.city}
             onChange={handleChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Your City"
+            placeholder="En que Ciudad Vives"
             required
           />
           {error.city && <span className="text-red-600">{error.city}</span>}
@@ -352,7 +364,7 @@ const Register = () => {
         <div className="mb-5">
           <label
             htmlFor="address"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
           >
             Dirección
           </label>
@@ -371,33 +383,16 @@ const Register = () => {
           )}
         </div>
 
-        <div className="flex items-start mb-5">
-          <div className="flex items-center h-5">
-            <input
-              id="remember"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-            />
-          </div>
-          <label
-            htmlFor="remember"
-            className="ml-2 text-sm font-bold text-green-900 dark:text-gray-300"
-          >
-            Remember me
-          </label>
-        </div>
-
         <button
           disabled={Object.values(error).some((err) => err)}
           type="submit"
           className={`mb-2 text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
             Object.values(error).some((err) => err)
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-900 hover:bg-green-500"
+              : "bg-gray-900 hover:bg-gray-700"
           }`}
         >
-          Submit
+          Registrar
         </button>
       </form>
       <AlertModal

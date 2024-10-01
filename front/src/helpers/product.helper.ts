@@ -114,10 +114,15 @@ export async function getProductsById(id: string): Promise<IProduct> {
 export async function getProductsByCategoryId(categoryId: string): Promise<IProduct[] | null> {
   try {
     const response = await fetch(`${APIURL}/categories/${categoryId}/products`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     const products: IProduct[] = await response.json();
     return products;
   } catch (error) {
     console.error(error);
     return null;
   }
-};
+}
+
+
