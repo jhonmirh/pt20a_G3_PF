@@ -3,6 +3,7 @@ interface CardsPropsAside {
     name: string;
     imageUrl?:string;
     hoverImageUrl?: string;
+    categoryId:string
   }
 
 export default CardsPropsAside;

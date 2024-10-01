@@ -40,6 +40,7 @@ const AsideList = async () => {
               key={category.id}
               id={category.id}
               name={category.name}
+              categoryId={category.id}
               imageUrl={category.imageUrl}
               hoverImageUrl={category.hoverImageUrl}
               description={category.description}

@@ -31,21 +31,23 @@
 
 // export default DatailProduct;
 
-import React from "react";
-import ProductId from "@/components/ProductId/ProductId";
+// import React from "react";
+// import ProductId from "@/components/CategoryId/CategoryId";
 
-interface DatailProductProps {
-  products: any[];
-}
+// interface DatailProductProps {
+//   products: any[];
+// }
 
-const DatailProduct: React.FC<DatailProductProps> = ({ products }) => {
-  return (
-    <div>
-      {products.map((product) => (
-        <ProductId key={product.id} {...product} />
-      ))}
-    </div>
-  );
-};
+// const DatailProduct: React.FC<DatailProductProps> = ({ products }) => {
+//   return (
+//     <div>
+ 
+      
+//       {products.map((product) => (
+//         <ProductId key={product.id} {...product} />
+//       ))}
+//     </div>
+//   );
+// };
 
-export default DatailProduct;
+// export default DatailProduct;
