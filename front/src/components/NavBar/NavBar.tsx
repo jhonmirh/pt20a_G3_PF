@@ -79,17 +79,17 @@ export default function NavBar({ images }: NavBarProps) {
 
         <nav className="flex items-center space-x-6">
           <Link href="/category" className="text-white hover:text-blue-500 transition-colors duration-300">
-            Category
+            Categoria
           </Link>
 
           <Link href="/administrator" className="text-white hover:text-blue-500 transition-colors duration-300">
-            Administrator
+            Admin
           </Link>
 
           {userData ? (
             <>
               <Link href="/service" className="text-white hover:text-blue-500 transition-colors duration-300">
-                Service
+                Servicio
               </Link>
 
               <Menu as="div" className="relative inline-block text-left">
@@ -120,7 +120,7 @@ export default function NavBar({ images }: NavBarProps) {
                                 : "text-white"
                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                           >
-                            Profiles
+                            Perfil
                           </Link>
                         )}
                       </Menu.Item>
@@ -134,7 +134,7 @@ export default function NavBar({ images }: NavBarProps) {
                                 : "text-white"
                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                           >
-                            Orders
+                            Turnos
                           </Link>
                         )}
                       </Menu.Item>
@@ -156,7 +156,7 @@ export default function NavBar({ images }: NavBarProps) {
                 title="Your Appointment"
               >
                 <span className="ml-1 text-white hover:text-blue-500">
-                  Add
+                  Agregar
                 </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +186,7 @@ export default function NavBar({ images }: NavBarProps) {
                 href="/register"
                 className="text-white hover:text-blue-500 transition-colors duration-300"
               >
-                Register
+                Registro
               </Link>
             </>
           )}
