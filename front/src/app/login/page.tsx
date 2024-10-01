@@ -1,9 +1,9 @@
+'use client'
+import Login from '@/components/Login/Login';
 
-import Login from "@/components/Login/Login";
-import { ILogin } from "@/interfaces/LoginRegister";
-import React from "react";
+const LoginPage = () => {
 
-const login = (dataUser?: ILogin) => {
+
   return (
     <div>
       <Login />
@@ -11,4 +11,4 @@ const login = (dataUser?: ILogin) => {
   );
 };
 
-export default login;
+export default LoginPage;

@@ -1,18 +1,16 @@
-'use client'
-
+// ShowComponent.tsx
+"use client";
 import { usePathname } from "next/navigation";
-import React, { ReactNode } from "react";
+import React from "react";
 
 const ShowComponent = ({ children }: { children: React.ReactNode }) => {
-  const pathName = usePathname();
+  // const pathName = usePathname();
 
-  return (<div>
-    {
-      pathName !== '/login' && (
-        children
-      )
-    }
-  </div>);
+  // if (pathName === "/login") {
+  //   return null; // Si la ruta es '/login', no mostramos nada
+  // }
+
+  return <div>{children}</div>;
 };
 
 export default ShowComponent;
