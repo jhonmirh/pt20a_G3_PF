@@ -1,11 +1,11 @@
-export default interface IProduct{
-    id:string;
-    name:string;
-    description:string;
-    price:number;
-    image:string;
-    categoryId:string;
-}
+export default interface IProduct {
+    id: string;
+    categoryId: string;
+    description: string;
+    image: string;
+    name: string;
+    price: string;
+  }
 
 
 export default interface ICategory{

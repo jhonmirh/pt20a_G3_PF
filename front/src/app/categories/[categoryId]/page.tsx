@@ -1,23 +1,25 @@
-// /app/categories/[categoryId]/products.tsx
-
+'use client'
 import React, { useEffect, useState } from "react";
-import { getProductsByCategoryId } from "@/helpers/product.helper";
 import IProduct from "@/interfaces/Products";
 import ProductId from "@/components/CategoryId/CategoryId";
 
 const ProductsPage = ({ params }: { params: { categoryId: string } }) => {
   const [products, setProducts] = useState<IProduct[] | null>(null);
+  const APIURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3010';
 
   useEffect(() => {
     const fetchProducts = async () => {
-      console.log(`Fetching products for categoryId: ${params.categoryId}`);
-      const fetchedProducts = await getProductsByCategoryId(params.categoryId);
-      console.log(fetchedProducts); // Verifica si se obtienen los productos
-      setProducts(fetchedProducts);
+      try {
+        const response = await fetch(`${APIURL}/categories/${params.categoryId}/products`);
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
     };
-
+  
     fetchProducts();
-  }, [params.categoryId]);
+  }, [params.categoryId, APIURL]);
 
   return (
     <div>
