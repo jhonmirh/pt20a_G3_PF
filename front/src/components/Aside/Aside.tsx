@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AlertModal from "../Alert/AlertModal";
 import CardsPropsAside from "./types";
 import { useLoggin } from "@/context/logginContext";
@@ -36,13 +36,14 @@ const AsideBar: React.FC<CardPropsAside> = ({ id, name, imageUrl, hoverImageUrl,
       const data = await response.json();
       console.log(data);
  
-      router.push(`/categories/${categoryId}/products`);
+      router.push(`/categories/${categoryId}`);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
   
-  
+
+
   
  
   const handleModalClose = () => {

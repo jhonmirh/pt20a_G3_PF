@@ -82,7 +82,7 @@ export default function NavBar({ images }: NavBarProps) {
             Categoria
           </Link>
 
-          <Link href="/administrator" className="text-white hover:text-blue-500 transition-colors duration-300">
+          <Link href="/admin" className="text-white hover:text-blue-500 transition-colors duration-300">
             Admin
           </Link>
 

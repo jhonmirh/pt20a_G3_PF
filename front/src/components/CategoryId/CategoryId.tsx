@@ -1,6 +1,6 @@
+
 import IProduct from "@/interfaces/Products";
 import AddApp from "../AddApp/AddApp";
-import React from "react";
 
 const ProductId: React.FC<IProduct> = ({
   id,
@@ -20,7 +20,7 @@ const ProductId: React.FC<IProduct> = ({
     categoryId,
   };
 
-  console.log(product); // Deberías ver el JSON con las propiedades en tu consola del navegador
+ 
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -44,3 +44,4 @@ const ProductId: React.FC<IProduct> = ({
 };
 
 export default ProductId;
+
