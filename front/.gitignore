@@ -2,9 +2,12 @@
 
 # dependencies
 /node_modules
+/back
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+front.rar
+back.rar
 
 # testing
 /coverage
