@@ -93,13 +93,13 @@ export default async function RootLayout({
         <LogginProvider>
           <ShowComponent>
             <NavBar images={images} />
-            <div className="flex flex-row justify-start">
-              <div className="w-1/4">
-                <AsideList />
-              </div>
-              <div className="flex-1 flex justify-center">
-                {children}
-              </div>
+            {/* Contenedor para AsideList y Children */}
+            <div className="flex flex-col items-center mb-4">
+              <AsideList />
+            </div>
+            {/* Este div se puede centrar usando flex */}
+            <div className="flex-1 flex justify-center">
+              {children}
             </div>
           </ShowComponent>
           <Footer />
@@ -107,4 +107,5 @@ export default async function RootLayout({
       </body>
     </html>
   );
+  
 }

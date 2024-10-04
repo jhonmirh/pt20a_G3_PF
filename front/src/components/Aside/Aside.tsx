@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AlertModal from "../Alert/AlertModal";
 import CardsPropsAside from "./types";
 import { useLoggin } from "@/context/logginContext";
@@ -24,14 +24,12 @@ const AsideBar: React.FC<CardPropsAside> = ({
   categoryId,
 }) => {
   const [showModal, setShowModal] = useState(false);
-  const [redirectPath, setRedirectPath] = useState<string | null>(null);
   const { userData } = useLoggin();
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const APIURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3010";
 
   const handleLinkClick = async (categoryId: string) => {
-    console.log(`Fetching products for categoryId: ${categoryId}`);
     try {
       const response = await fetch(
         `${APIURL}/categories/${categoryId}/products`
@@ -39,9 +37,6 @@ const AsideBar: React.FC<CardPropsAside> = ({
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      console.log(data);
-
       router.push(`/categories/${categoryId}`);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -50,51 +45,40 @@ const AsideBar: React.FC<CardPropsAside> = ({
 
   const handleModalClose = () => {
     setShowModal(false);
-    if (redirectPath) {
-      router.push(redirectPath);
-    }
   };
 
   return (
     <div
-      className={`flex flex-col justify-center items-center ${
-        isHovered ? "bg-gray-900" : "bg-white"
-      } border border-blue-500 rounded-lg shadow-lg shadow-blue-500/50 cursor-pointer mb-4 p-4 transition duration-300 ease-in-out`}
-      style={{ width: isHovered ? "320px" : "180px", height: "220px" }}
+      className={`flex flex-col justify-center items-center transition-transform transform hover:scale-125 ${
+        isHovered ? "bg-gray-800 text-white" : "bg-white text-gray-800"
+      } rounded-full shadow-lg cursor-pointer mb-4 p-4 transition duration-300 ease-in-out`}
+      style={{
+        width: isHovered ? "220px" : "160px", // Crece al hacer hover
+        height: isHovered ? "220px" : "160px", // Ajuste dinámico del tamaño del círculo
+        border: "none", // Sin borde
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Sombra sutil para dar efecto 3D
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => handleLinkClick(categoryId)}
     >
-      <div className="flex flex-col items-start p-4">
-        {isHovered ? (
-          <div className="flex flex-row items-center">
-            <Image
-              src={hoverImageUrl || "/default-image.jpg"}
-              alt={name}
-              width={80}
-              height={80}
-              className="ml-4"
-            />
-            <p className={`text-white ml-8 mb-5`}>{description}</p>
-          </div>
-        ) : (
-          <Image
-            src={imageUrl || "/default-image.jpg"}
-            alt={name}
-            width={80}
-            height={80}
-          />
+      <div className="flex flex-col items-center p-2">
+        <Image
+          src={
+            isHovered
+              ? hoverImageUrl || "/default-image.jpg"
+              : imageUrl || "/default-image.jpg"
+          }
+          alt={name}
+          width={isHovered ? 80 : 50} // Cambia el tamaño de la imagen al hacer hover
+          height={isHovered ? 80 : 50}
+          className="rounded-full" // Imagen redonda
+        />
+        <h5 className="text-xs font-bold text-center mt-2">{name}</h5>{" "}
+        {/* Tamaño del texto más pequeño */}
+        {isHovered && (
+          <p className="text-xs text-white text-center mt-1">{description}</p> // Verifica esta línea
         )}
-        <h5
-          className={`text-base font-bold tracking-tight ${
-            isHovered ? "text-white" : "text-blue-700"
-          }`}
-        >
-          {name}
-        </h5>
-        {/* {description && (
-          <p className={`mt-2 ${isHovered ? "text-white" : "text-gray-600"}`}>{description}</p> // Cambiar el color de la descripción también
-        )} */}
       </div>
 
       {!userData && (

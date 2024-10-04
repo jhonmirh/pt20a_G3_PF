@@ -7,14 +7,13 @@ const AsideList = async () => {
   const categories = await getCategory();
 
   const categoriesWithImages = categories.map((category) => {
-
     const normalizedCategoryName = category.name
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .trim()
       .toLowerCase();
 
-    const imageObj = imageCategory.find((img) => 
+    const imageObj = imageCategory.find((img) =>
       img.name
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -30,26 +29,22 @@ const AsideList = async () => {
     };
   });
 
-  console.log(categoriesWithImages);
   return (
-    <div className="flex flex-col items-start p-5">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4"> {/* Cambiar las columnas y el espaciado */}
       {categoriesWithImages &&
-        categoriesWithImages.map((category) => {
-          return (
-            <AsideBar
-              key={category.id}
-              id={category.id}
-              name={category.name}
-              categoryId={category.id}
-              imageUrl={category.imageUrl}
-              hoverImageUrl={category.hoverImageUrl}
-              description={category.description}
-            />
-          );  
-        })}
+        categoriesWithImages.map((category) => (
+          <AsideBar
+            key={category.id}
+            id={category.id}
+            name={category.name}
+            categoryId={category.id}
+            imageUrl={category.imageUrl}
+            hoverImageUrl={category.hoverImageUrl}
+            description={category.description}
+          />
+        ))}
     </div>
   );
 };
 
 export default AsideList;
-
