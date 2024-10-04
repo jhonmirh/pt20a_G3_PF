@@ -26,6 +26,7 @@ const AsideList = async () => {
       imageUrl: imageObj ? imageObj.imageUrl : "",
       hoverImageUrl: imageObj ? imageObj.hoverImageUrl : "",
       description: imageObj ? imageObj.description : "",
+      ribbonText: imageObj ? imageObj.ribbonText : "",
     };
   });
 
@@ -41,6 +42,7 @@ const AsideList = async () => {
             imageUrl={category.imageUrl}
             hoverImageUrl={category.hoverImageUrl}
             description={category.description}
+            ribbonText={category.ribbonText}
           />
         ))}
     </div>
