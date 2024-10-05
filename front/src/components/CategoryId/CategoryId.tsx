@@ -1,4 +1,3 @@
-
 import IProduct from "@/interfaces/Products";
 import AddApp from "../AddApp/AddApp";
 
@@ -10,7 +9,6 @@ const ProductId: React.FC<IProduct> = ({
   price,
   categoryId,
 }) => {
-
   const product: IProduct = {
     id,
     name,
@@ -20,11 +18,14 @@ const ProductId: React.FC<IProduct> = ({
     categoryId,
   };
 
- 
-
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[75%] h-[95vh] bg-white rounded-lg shadow-lg border border-green-950 shadow-green-950 p-6">
+      <div
+        className="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[75%] h-[95vh] rounded-lg shadow-lg border border-green-950 shadow-green-950 p-6"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.8)", // Fondo blanco con 80% de transparencia
+        }}
+      >
         <div className="absolute top-4 right-4">
           <AddApp category={product} />
         </div>
@@ -44,4 +45,3 @@ const ProductId: React.FC<IProduct> = ({
 };
 
 export default ProductId;
-

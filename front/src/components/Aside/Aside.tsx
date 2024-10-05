@@ -13,7 +13,7 @@ interface CardPropsAside extends CardsPropsAside {
   hoverImageUrl?: string;
   description?: string;
   categoryId: string;
-  ribbonText: string; // Añadimos el texto personalizado para la cinta
+  ribbonText: string;
 }
 
 const AsideBar: React.FC<CardPropsAside> = ({
@@ -23,7 +23,7 @@ const AsideBar: React.FC<CardPropsAside> = ({
   hoverImageUrl,
   description,
   categoryId,
-  ribbonText, // Recibimos el texto personalizado
+  ribbonText,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { userData } = useLoggin();
@@ -51,49 +51,50 @@ const AsideBar: React.FC<CardPropsAside> = ({
 
   return (
     <div
-      className={`relative flex flex-col justify-between items-center transition-transform transform hover:scale-105 ${
+      className={`relative flex flex-col items-center transition-transform transform hover:scale-105 ${
         isHovered ? "bg-gray-900 text-white" : "bg-white text-gray-800"
-      } rounded-lg shadow-lg cursor-pointer mb-4 p-4 transition duration-300 ease-in-out`}
+      } rounded-lg shadow-lg cursor-pointer mb-4 p-2 transition duration-300 ease-in-out`}
       style={{
-        width: "150px", // Tamaño reducido
-        height: isHovered ? "300px" : "250px", // Altura ajustada
+        width: "150px",
+        height: isHovered ? "300px" : "250px",
         borderRadius: "12px",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Sombra
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+        backgroundColor: isHovered
+          ? "rgba(17, 24, 39, 0.85)"
+          : "rgba(255, 255, 255, 0.85)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => handleLinkClick(categoryId)}
     >
-      {/* Imagen dentro de la tarjeta */}
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col items-center space-y-2 mt-5">
         <Image
-          src={isHovered ? hoverImageUrl || "/default-image.jpg" : imageUrl || "/default-image.jpg"}
+          src={
+            isHovered
+              ? hoverImageUrl || "/default-image.jpg"
+              : imageUrl || "/default-image.jpg"
+          }
           alt={name}
           width={60}
           height={60}
-          className="rounded-full"
         />
+
+        <h5 className="text-sm font-bold text-center">{name}</h5>
+
+        {isHovered && <p className="text-xs text-center px-2">{description}</p>}
       </div>
 
-      {/* Título sin margen superior */}
-      <h5 className="text-sm font-bold text-center mt-0 mb-1">{name}</h5> {/* Ajustamos el margen inferior si es necesario */}
-
-      {/* Descripción, visible solo en hover y sin margen superior */}
-      {isHovered && (
-        <p className="text-xs text-center mt-0">{description}</p>
-      )}
-
-      {/* Cinta en la parte inferior */}
       <div
         className={`absolute bottom-0 w-full py-2 px-4 flex justify-between items-center ${
           isHovered ? "bg-white text-gray-900" : "bg-gray-900 text-white"
         } transition-colors duration-300`}
         style={{
-          borderBottomLeftRadius: "12px", // Borde redondeado solo en la parte inferior
-          borderBottomRightRadius: "12px", // Borde redondeado solo en la parte inferior
+          borderBottomLeftRadius: "12px",
+          borderBottomRightRadius: "12px",
         }}
       >
-        {/* Texto personalizado en la cinta */}
         <p className="text-xs font-semibold text-center leading-tight">
           {ribbonText}
         </p>
@@ -118,12 +119,11 @@ const AsideBar: React.FC<CardPropsAside> = ({
         </div>
       </div>
 
-      {/* Modal para usuarios no registrados */}
       {!userData && (
         <AlertModal
           show={showModal}
           onClose={handleModalClose}
-          title="Visitor in JhonDay Solutions"
+          title="Visitante de JhonDay Soluciones"
           message="The best technological attention Register or Sign In"
         />
       )}

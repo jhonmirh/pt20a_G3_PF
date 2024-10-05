@@ -33,7 +33,7 @@
     },
     {
       id: 5,
-      name: "Instalacion de SIGESMD - Administración Escolar",
+      name: "Instalacion de SIGESMD en la Administración Escolar",
       imageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/categorias/icbbzhqosouazfvr5srf.jpg",
       hoverImageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727490633/categorias/ynjyreuvwaohhjxnszt0.svg",
       description:"El Mejor Sistema de Gestion Escolar Módular y Distribuido, Conozcalo ...",
