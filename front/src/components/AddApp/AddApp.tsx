@@ -28,8 +28,8 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ appointmentId,
     },
   });
 
-  const [isSubmitted, setIsSubmitted] = useState(false); // Seguimiento del estado de envío
-  const [error, setError] = useState<string | null>(null); // Para rastrear mensajes de error
+  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const [error, setError] = useState<string | null>(null); 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,23 +39,22 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ appointmentId,
       return;
     }
   
-    // Definir el tipo para los productos
+
     interface Product {
       id: string;
     }
   
-    // Recuperar productos desde localStorage
+   
     const storedProducts = localStorage.getItem('products');
   
-    // Verificar que existan productos y extraer solo los IDs con tipado explícito
-    const products: string[] = storedProducts ? (JSON.parse(storedProducts) as Product[]).map((product: Product) => product.id) : [];
   
-    // Definir la data para la cita, incluyendo solo los IDs de los productos
+    const products: string[] = storedProducts ? (JSON.parse(storedProducts) as Product[]).map((product: Product) => product.id) : [];
+
     const appointmentData = {
-      date: new Date(formData.date).toISOString(), // Normaliza la fecha
+      date: new Date(formData.date).toISOString(), 
       description: formData.description,
-      user: userData?.userData?.id,  // Solo el ID del usuario
-      products: products  // Enviamos solo los IDs de los productos
+      user: userData?.userData?.id,  
+      products: products  
     };
   
     try {
@@ -70,7 +69,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ appointmentId,
       if (response.status === 201) {
         const result = await response.json();
         console.log("Cita creada exitosamente:", result);
-        // Aquí podrías redirigir o actualizar el estado de la aplicación con los datos de la cita
+  
       }
     } catch (error) {
       console.error("Error creando la cita:", error);
