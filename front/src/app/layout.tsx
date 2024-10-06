@@ -7,6 +7,7 @@ import Footer from "@/components/Footer/Footer";
 import ShowComponent from "@/components/ShowComponent/ShowComponent";
 import "./globals.css";
 import AsideList from "@/components/AsideList/AsideList";
+import { AppointmentForm } from "@/components/AddApp/AddApp";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -51,7 +52,7 @@ export default async function RootLayout({
             <NavBar images={images} />
 
             <div className="flex flex-col items-center mb-4">
-              <AsideList />
+            <AsideList />
             </div>
 
             <div className="flex-1 flex justify-center">

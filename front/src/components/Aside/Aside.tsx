@@ -5,7 +5,8 @@ import CardsPropsAside from "./types";
 import { useLoggin } from "@/context/logginContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
+import Agg from "../ButtonAgg/Agg";
+import IProduct from "@/interfaces/Products";
 interface CardPropsAside extends CardsPropsAside {
   id: string;
   name: string;
@@ -13,12 +14,16 @@ interface CardPropsAside extends CardsPropsAside {
   hoverImageUrl?: string;
   description?: string;
   categoryId: string;
+  image: string;
+  price: string;
   ribbonText: string;
 }
 
 const AsideBar: React.FC<CardPropsAside> = ({
   id,
   name,
+  price,
+  image,
   imageUrl,
   hoverImageUrl,
   description,
@@ -30,7 +35,14 @@ const AsideBar: React.FC<CardPropsAside> = ({
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const APIURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3010";
-
+  const product: IProduct = {
+    id,
+    name,
+    description: description || "Descripción no disponible", // Asegúrate de que no sea undefined
+    image, // o image
+    categoryId,
+    price: price || "0.00", // Asegúrate de definir 'price' correctamente
+  };
   const handleLinkClick = async (categoryId: string) => {
     try {
       const response = await fetch(
@@ -50,13 +62,20 @@ const AsideBar: React.FC<CardPropsAside> = ({
   };
 
   return (
+      <>
+    
+             <div>
+              
+              <Agg product={product} />
+              </div>   
+
     <div
       className={`relative flex flex-col items-center transition-transform transform hover:scale-105 ${
         isHovered ? "bg-gray-900 text-white" : "bg-white text-gray-800"
       } rounded-lg shadow-lg cursor-pointer mb-4 p-2 transition duration-300 ease-in-out`}
       style={{
         width: "150px",
-        height: isHovered ? "300px" : "250px",
+        height: isHovered ? "320px" : "270px",
         borderRadius: "12px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
         backgroundColor: isHovered
@@ -69,7 +88,9 @@ const AsideBar: React.FC<CardPropsAside> = ({
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => handleLinkClick(categoryId)}
     >
-      <div className="flex flex-col items-center space-y-2 mt-5">
+
+
+      <div className="flex flex-col items-center space-y-2 mt-2">
         <Image
           src={
             isHovered
@@ -111,11 +132,12 @@ const AsideBar: React.FC<CardPropsAside> = ({
             className="w-4 h-4"
           >
             <path
-              fillRule="evenodd"
+              fillRule="evenodd" // Changed here
               d="M12 5.25a.75.75 0 01.75.75v5.25h5.25a.75.75 0 010 1.5H12.75v5.25a.75.75 0 01-1.5 0V12.75H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z"
-              clipRule="evenodd"
+              clipRule="evenodd" // Changed here
             />
           </svg>
+          {/* <Agg product={product}/> */}
         </div>
       </div>
 
@@ -128,6 +150,7 @@ const AsideBar: React.FC<CardPropsAside> = ({
         />
       )}
     </div>
+    </>
   );
 };
 

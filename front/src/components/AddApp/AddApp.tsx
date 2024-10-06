@@ -1,109 +1,167 @@
-import React, { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { userSession } from "@/interfaces/LoginRegister";
-import IProduct from "@/interfaces/Products";
-import AlertModal from "../Alert/AlertModal";
-import ICategory from "@/interfaces/Category";
+'use client'
+import { useState } from "react";
+import { useLoggin } from "@/context/logginContext";
+import { useRouter } from "next/navigation";
+import { createAppointment, updateAppointment, cancelAppointment } from "@/helpers/appointment.helper";
+import { IAppointmentData } from "@/interfaces/Appointment";
 
-const AddAppointment = ({ category }: { category: ICategory }) => {
-  const [showNavigation, setShowNavigation] = useState<userSession | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({ title: "", message: "" });
-  const pathname = usePathname();
+interface AppointmentFormProps {
+  appointmentId?: string; // Para editar
+  initialData?: IAppointmentData; // Datos iniciales
+}
+
+export const AppointmentForm: React.FC<AppointmentFormProps> = ({ appointmentId, initialData }) => {
+  const { userData } = useLoggin();
   const router = useRouter();
+  const [formData, setFormData] = useState<IAppointmentData>({
+    id: appointmentId || "",
+    date: initialData?.date || "",
+    description: initialData?.description || "",
+    userId: userData?.userData?.id || "", // Obtiene el ID del usuario actual
+    product: {
+      id: initialData?.product?.id || '',
+      categoryId: initialData?.product?.categoryId || '',
+      description: initialData?.product?.description || '',
+      image: initialData?.product?.image || '',
+      name: initialData?.product?.name || '',
+      price: initialData?.product?.price || '',
+    },
+  });
 
-  useEffect(() => {
-    const sessionUser = localStorage.getItem("sessionStart");
-    if (sessionUser) {
-      setShowNavigation(JSON.parse(sessionUser));
-    }
+  const [isSubmitted, setIsSubmitted] = useState(false); // Seguimiento del estado de envío
+  const [error, setError] = useState<string | null>(null); // Para rastrear mensajes de error
 
-    const appointment = JSON.parse(localStorage.getItem("appointment") || "[]");
-    const cleanedAppointment = appointment.filter((item: any) => item !== null);
-    if (cleanedAppointment.length !== appointment.length) {
-      localStorage.setItem("appointment", JSON.stringify(cleanedAppointment));
-    }
-  }, []);
-
-  const handleClick = () => {
-    if (!showNavigation?.token) {
-      setModalContent({
-        title: "Error de Sesión",
-        message: "Por favor, inicia sesión para agregar una cita.",
-      });
-      setShowModal(true);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  
+    if (!formData.date || !formData.description) {
+      alert("Complete todos los campos");
       return;
     }
-
+  
+    // Definir el tipo para los productos
+    interface Product {
+      id: string;
+    }
+  
+    // Recuperar productos desde localStorage
+    const storedProducts = localStorage.getItem('products');
+  
+    // Verificar que existan productos y extraer solo los IDs con tipado explícito
+    const products: string[] = storedProducts ? (JSON.parse(storedProducts) as Product[]).map((product: Product) => product.id) : [];
+  
+    // Definir la data para la cita, incluyendo solo los IDs de los productos
+    const appointmentData = {
+      date: new Date(formData.date).toISOString(), // Normaliza la fecha
+      description: formData.description,
+      user: userData?.userData?.id,  // Solo el ID del usuario
+      products: products  // Enviamos solo los IDs de los productos
+    };
+  
     try {
-      const appointment: ICategory[] = JSON.parse(localStorage.getItem("appointment") || "[]");
-      const isProductInApp = appointment.some((p) => p.id === category.id);
-
-      if (isProductInApp) {
-        setModalContent({
-          title: "Verifica tus Citas",
-          message: "El producto ya está en la lista de citas.",
-        });
-        setShowModal(true);
-      } else {
-        appointment.push(category);
-        localStorage.setItem("appointment", JSON.stringify(appointment));
-        setModalContent({
-          title: "Agregado Satisfactoriamente",
-          message: "Producto agregado a tus citas con éxito.",
-        });
-        setShowModal(true);
+      const response = await fetch("http://localhost:3010/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(appointmentData)
+      });
+  
+      if (response.status === 201) {
+        const result = await response.json();
+        console.log("Cita creada exitosamente:", result);
+        // Aquí podrías redirigir o actualizar el estado de la aplicación con los datos de la cita
       }
     } catch (error) {
-      console.error("Error al agregar a la cita", error);
-      setModalContent({
-        title: "Advertencia de Cita",
-        message: "Hubo un error al agregar el producto a la cita.",
-      });
-      setShowModal(true);
+      console.error("Error creando la cita:", error);
     }
   };
+  
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    router.push("/appointment"); 
+  const handleDelete = async () => {
+    if (!appointmentId) return;
+
+    try {
+      await cancelAppointment(appointmentId);
+      setFormData({
+        id: "",
+        date: "",
+        description: "",
+        userId: userData?.userData?.id || "",
+        product: {
+          id: '',
+          categoryId: '',
+          description: '',
+          image: '',
+          name: '',
+          price: '',
+        },
+      });
+      setIsSubmitted(false);
+    } catch (error) {
+      console.error("Error al eliminar la cita:", error);
+      setError("Error al eliminar la cita");
+    }
   };
 
   return (
-    <>
-      {/* {showNavigation?.token && pathname !== "/appointment" && pathname !== "/dashboard/orders" && ( */}
-        <div 
-          onClick={handleClick} 
-          title="Add Appointment" 
-          className="flex items-center space-x-1 cursor-pointer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-green-800 hover:text-green-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 3h10M5 3h2v2H5V3zm12 0h2v2h-2V3zM7 7h10M5 7h2v2H5V7zm12 0h2v2h-2V7zM5 11h14v10H5V11z"
-            />
-          </svg>
-          <span className="text-green-800 hover:text-green-600">Add</span>
-
-          <AlertModal
-            show={showModal}
-            onClose={handleCloseModal}
-            title={modalContent.title}
-            message={modalContent.message}
-          />
+    <div className="bg-white bg-opacity-85 p-6 rounded-lg shadow-lg mb-2">
+      {isSubmitted ? (
+        <div>
+          <h2 className="text-gray-900 text-2xl text-center mb-4">
+            {appointmentId ? "Cita Actualizada" : "Cita Creada"}
+          </h2>
+          <p className="text-gray-900">Fecha y Hora: {formData.date}</p>
+          <p className="text-gray-900">Descripción: {formData.description}</p>
+          <div className="flex justify-center space-x-4 mt-4">
+            <button
+              onClick={() => setIsSubmitted(false)}
+              className="bg-gray-900 text-white rounded-md py-2 px-4 hover:bg-gray-700 transition duration-300"
+            >
+              Modificar Cita
+            </button>
+            <button
+              onClick={handleDelete}
+              className="bg-red-600 text-white rounded-md py-2 px-4 hover:bg-red-500 transition duration-300"
+            >
+              Borrar Cita
+            </button>
+          </div>
         </div>
-      {/* ) */}
-      {/* // } */}
-    </>
+      ) : (
+        <div>
+          <h2 className="text-gray-900 text-2xl text-center mb-8">{appointmentId ? "Editar Cita" : "Crear Cita"}</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-900">Fecha y Hora:</label>
+              <input
+                type="datetime-local"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-900">Descripción:</label>
+              <input
+                type="text"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-gray-900 text-white rounded-md py-2 hover:bg-gray-700 transition duration-300"
+            >
+              {appointmentId ? "Actualizar Cita" : "Crear Cita"}
+            </button>
+          </form>
+        </div>
+      )}
+      {error && <p className="text-red-600 text-center mt-4">{error}</p>}
+    </div>
   );
 };
-
-export default AddAppointment;

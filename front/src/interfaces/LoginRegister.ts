@@ -35,12 +35,12 @@ export type TRegisterError = {
 
 
 export interface IOrder {
-    id: number;
+    id: string;
     status: string;
     date: string;
     products: IProduct[];
     user: {
-        id: number;
+        id: string;
         name: string;
         email: string;
         age: number;
@@ -54,7 +54,7 @@ export interface IOrder {
 export interface userSession {
     token: string;
     userData: {
-        id: number;
+        id: string;
         name: string;
         email: string;
         age: number;

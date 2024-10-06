@@ -27,7 +27,7 @@ export default function NavBar({ images }: NavBarProps) {
   const confirmSignOut = () => {
     localStorage.removeItem("sessionStart");
     setUserData(null);
-    localStorage.removeItem("cart");
+    localStorage.removeItem("appointment");
     setIsModalOpen(false);
     router.push("/");
   };

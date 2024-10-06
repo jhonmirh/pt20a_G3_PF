@@ -1,11 +1,11 @@
-import CartPage from "@/components/Appointment/AppointmentPage";
-
-const Car = () => {
+import React from 'react'
+import { AppointmentForm } from '@/components/AddApp/AddApp'
+const AppointmentPage = () => {
   return (
     <div>
-      <CartPage />
+      <AppointmentForm />
     </div>
-  );
-};
+  )
+}
 
-export default Car;
+export default AppointmentPage
