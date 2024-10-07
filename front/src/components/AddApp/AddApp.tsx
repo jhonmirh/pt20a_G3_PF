@@ -1,166 +1,132 @@
-'use client'
-import { useState } from "react";
-import { useLoggin } from "@/context/logginContext";
-import { useRouter } from "next/navigation";
-import { createAppointment, updateAppointment, cancelAppointment } from "@/helpers/appointment.helper";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
+import { createAppointment } from "@/helpers/appointment.helper";
+import { useLoggin } from "@/context/logginContext";
+import AlertModal from "../Alert/AlertModal";
 
-interface AppointmentFormProps {
-  appointmentId?: string; // Para editar
-  initialData?: IAppointmentData; // Datos iniciales
-}
-
-export const AppointmentForm: React.FC<AppointmentFormProps> = ({ appointmentId, initialData }) => {
+const AppointmentForm = () => {
   const { userData } = useLoggin();
-  const router = useRouter();
-  const [formData, setFormData] = useState<IAppointmentData>({
-    id: appointmentId || "",
-    date: initialData?.date || "",
-    description: initialData?.description || "",
-    userId: userData?.userData?.id || "", // Obtiene el ID del usuario actual
-    product: {
-      id: initialData?.product?.id || '',
-      categoryId: initialData?.product?.categoryId || '',
-      description: initialData?.product?.description || '',
-      image: initialData?.product?.image || '',
-      name: initialData?.product?.name || '',
-      price: initialData?.product?.price || '',
-    },
+  const [appointmentData, setAppointmentData] = useState<IAppointmentData>({
+    id: "",
+    date: "",
+    description: "",
+    userId: userData?.userData?.id || "",
+    categoryId: "",
   });
 
-  const [isSubmitted, setIsSubmitted] = useState(false); 
-  const [error, setError] = useState<string | null>(null); 
+  const [showModifyDelete, setShowModifyDelete] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState({ title: "", message: "" });
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  
-    if (!formData.date || !formData.description) {
-      alert("Complete todos los campos");
-      return;
-    }
-  
+  // Nuevo useEffect para obtener el productId desde localStorage y asignarlo
+  useEffect(() => {
+    const productData = localStorage.getItem("appointment");
+    let categoryId = "";
 
-    interface Product {
-      id: string;
-    }
-  
-   
-    const storedProducts = localStorage.getItem('products');
-  
-  
-    const products: string[] = storedProducts ? (JSON.parse(storedProducts) as Product[]).map((product: Product) => product.id) : [];
-
-    const appointmentData = {
-      date: new Date(formData.date).toISOString(), 
-      description: formData.description,
-      user: userData?.userData?.id,  
-      products: products  
-    };
-  
     try {
-      const response = await fetch("http://localhost:3010/appointments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(appointmentData)
-      });
-  
-      if (response.status === 201) {
-        const result = await response.json();
-        console.log("Cita creada exitosamente:", result);
-  
+      if (productData) {
+        const parsedProductData = JSON.parse(productData);
+        if (Array.isArray(parsedProductData)) {
+          categoryId = parsedProductData[0]; // Suponiendo que el primer elemento es el categoryId
+        } else {
+          categoryId = parsedProductData; // Si no es un array, úsalo directamente
+        }
       }
     } catch (error) {
-      console.error("Error creando la cita:", error);
+      console.error("Error parsing product data from localStorage", error);
     }
-  };
-  
 
-  const handleDelete = async () => {
-    if (!appointmentId) return;
+    setAppointmentData(prevData => ({
+      ...prevData,
+      categoryId: categoryId
+      }));
+  }, []);
+
+
+  const handleAddAppointment = async () => {
+    const appointmentData = {
+        date: '2024-10-08T21:09',
+        description: 'sdfsdfdf',
+        user: 'f885c803-1e3f-4bda-9ce3-dfaa7ad650c6',
+        categoryId: 'c7111440-c052-419d-9a2b-387908f2549b', // Cambia a categoryId
+    };
 
     try {
-      await cancelAppointment(appointmentId);
-      setFormData({
-        id: "",
-        date: "",
-        description: "",
-        userId: userData?.userData?.id || "",
-        product: {
-          id: '',
-          categoryId: '',
-          description: '',
-          image: '',
-          name: '',
-          price: '',
-        },
-      });
-      setIsSubmitted(false);
+        const newAppointment = await createAppointment(appointmentData);
+        console.log('Cita creada:', newAppointment);
     } catch (error) {
-      console.error("Error al eliminar la cita:", error);
-      setError("Error al eliminar la cita");
+        console.error('Error creando la cita:', error);
     }
+};
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAppointmentData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
-    <div className="bg-white bg-opacity-85 p-6 rounded-lg shadow-lg mb-2">
-      {isSubmitted ? (
-        <div>
-          <h2 className="text-gray-900 text-2xl text-center mb-4">
-            {appointmentId ? "Cita Actualizada" : "Cita Creada"}
-          </h2>
-          <p className="text-gray-900">Fecha y Hora: {formData.date}</p>
-          <p className="text-gray-900">Descripción: {formData.description}</p>
-          <div className="flex justify-center space-x-4 mt-4">
-            <button
-              onClick={() => setIsSubmitted(false)}
-              className="bg-gray-900 text-white rounded-md py-2 px-4 hover:bg-gray-700 transition duration-300"
-            >
+    <div className="p-4 bg-white bg-opacity-80 rounded-lg shadow-md max-w-lg mx-auto mt-10">
+      <h2 className="text-xl font-bold mb-4">Agendar Cita</h2>
+
+      <label className="block mb-2 text-sm font-medium text-gray-700">
+        Fecha y Hora
+      </label>
+      <input
+        type="datetime-local"
+        name="date"
+        value={appointmentData.date}
+        onChange={handleChange}
+        className="mb-4 p-2 w-full border rounded"
+        required
+      />
+
+      <label className="block mb-2 text-sm font-medium text-gray-700">
+        Descripción
+      </label>
+      <input
+        type="text"
+        name="description"
+        value={appointmentData.description}
+        onChange={handleChange}
+        className="mb-4 p-2 w-full border rounded"
+        placeholder="Descripción de la cita"
+        required
+      />
+
+      {/* Botones */}
+      <div className="flex justify-around mt-6">
+        <button
+          onClick={handleAddAppointment}
+          className="bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors"
+        >
+          Agregar Cita
+        </button>
+
+        {showModifyDelete && (
+          <>
+            <button className="bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors">
               Modificar Cita
             </button>
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 text-white rounded-md py-2 px-4 hover:bg-red-500 transition duration-300"
-            >
-              Borrar Cita
+            <button className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-400 transition-colors">
+              Eliminar Cita
             </button>
-          </div>
-        </div>
-      ) : (
-        <div>
-          <h2 className="text-gray-900 text-2xl text-center mb-8">{appointmentId ? "Editar Cita" : "Crear Cita"}</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-900">Fecha y Hora:</label>
-              <input
-                type="datetime-local"
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                required
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-900">Descripción:</label>
-              <input
-                type="text"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                required
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-gray-900 text-white rounded-md py-2 hover:bg-gray-700 transition duration-300"
-            >
-              {appointmentId ? "Actualizar Cita" : "Crear Cita"}
-            </button>
-          </form>
-        </div>
-      )}
-      {error && <p className="text-red-600 text-center mt-4">{error}</p>}
+          </>
+        )}
+      </div>
+
+      <AlertModal
+        show={showAlert}
+        onClose={() => setShowAlert(false)}
+        title={alertContent.title}
+        message={alertContent.message}
+      />
     </div>
   );
 };
+
+export default AppointmentForm;

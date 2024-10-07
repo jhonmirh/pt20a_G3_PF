@@ -16,7 +16,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
   return (
     <>
-      {!userData?.token ? (
+   
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 max-w-md mx-auto shadow-[0_4px_6px_rgba(0,0,0,0.3),0_2px_4px_rgba(59,197,59,0.9)]">
             <h2 className="text-2xl font-bold text-red-600 mb-4 text-center">
@@ -31,7 +31,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
             </button>
           </div>
         </div>
-      ) : null}
+   
     </>
   );
 };

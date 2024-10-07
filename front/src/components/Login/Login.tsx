@@ -17,7 +17,6 @@ const Login = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
 
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setData({ ...dataUser, [name]: value });
@@ -28,17 +27,17 @@ const Login = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); 
-  
+    event.preventDefault();
+
     try {
-      const response = await loginUser(dataUser); 
+      const response = await loginUser(dataUser);
       console.log(dataUser);
-      
+
       const { user, token } = response;
       if (!user) {
-        throw new Error('Usuario no Registrado'); 
+        throw new Error("Usuario no Registrado");
       }
-  
+
       const userData = {
         id: user.id,
         name: user.name,
@@ -46,43 +45,42 @@ const Login = () => {
         address: user.address,
         phone: user.phone,
         email: user.email,
-        password:user.password,
+        password: user.password,
         city: user.city,
         orders: user.orders,
       };
 
       delete userData.password;
-  
+
       setUserData({ token, userData });
-  
+
       setModalContent({
-        title: "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
+        title:
+          "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
         message: "Satisfactoriamente Logueado",
       });
       setShowModal(true);
     } catch (error: any) {
-      console.error('Error durante el Login:', error); 
-  
+      console.error("Error durante el Login:", error);
 
       setModalContent({
         title: "Error",
-        message: error.message || "Un Inesperado Error a Sucedido durante el Login.",
+        message:
+          error.message || "Un Inesperado Error a Sucedido durante el Login.",
       });
       setShowModal(true);
     }
   };
 
-
-
   const handleCloseModal = () => {
     setShowModal(false);
-if(userData?.token){
-    router.push("/");}
-    else{
-    router.push("/login")
+    if (userData?.token) {
+      router.push("/");
+    } else {
+      router.push("/login");
     }
   };
-  
+
   useEffect(() => {
     const loginErrors = validateLogin(dataUser);
 
@@ -102,12 +100,17 @@ if(userData?.token){
   return (
     <div>
       <div className="text-center text-green-900 font-bold mb-5">
-        <h1>Ingresar en JhonDay Servicios Tecnológicos</h1>
+        <div className="relative mb-4">
+          <div className="absolute inset-0 bg-white bg-opacity-80 rounded-lg shadow-lg shadow-gray-900 z-0"></div>
+          <h1 className="text-3xl font-bold text-gray-900 relative z-10">
+            Ingresar en JhonDay Servicios Tecnológicos
+          </h1>
+        </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="mb-5 rounded-md max-w-sm mx-auto shadow-lg border border-green-800 p-5"
+        className="mb-5 rounded-md max-w-sm mx-auto shadow-lg border border-green-800 p-5 bg-white bg-opacity-85"
       >
         <div className="mb-5">
           <label
@@ -143,7 +146,7 @@ if(userData?.token){
             name="password"
             value={dataUser.password}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10" // Añade espacio para el botón
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
             placeholder="********"
             required
           />
@@ -215,11 +218,11 @@ if(userData?.token){
           disabled={Object.values(error).some((err) => err)}
           type="submit"
           className={`mb-2 text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
-    ${
-      Object.values(error).some((err) => err)
-        ? "bg-gray-400 cursor-not-allowed"
-        : "bg-green-900 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-    }`}
+            ${
+              Object.values(error).some((err) => err)
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gray-900 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
+            }`}
         >
           Ingresar
         </button>
@@ -236,4 +239,3 @@ if(userData?.token){
 };
 
 export default Login;
-

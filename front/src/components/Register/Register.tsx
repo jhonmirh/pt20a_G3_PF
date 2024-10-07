@@ -118,14 +118,16 @@ const Register = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <div className="text-center text-green-900 font-bold mt-5 mb-5">
-        <h1 className="text-3xl font-bold text-gray-900 shadow-gray-900/50 shadow-md mb-4">
-          Registro en Soluciones JhonDay Servicios Tenológicos
-        </h1>
+        <div className="relative mb-1">
+          <div className="absolute inset-0 bg-white bg-opacity-80 rounded-lg shadow-lg shadow-gray-900 z-0"></div>
+          <h1 className="text-3xl font-bold text-gray-900 relative z-10">
+            Registro en Soluciones JhonDay Servicios Tenológicos
+          </h1>
+        </div>
       </div>
-
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg mb-3 rounded-md mx-auto shadow-lg border border-gray-900 p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:max-w-md sm:max-w-sm"
+        className="w-full max-w-lg mb-3 rounded-md mx-auto shadow-lg border border-gray-900 bg-white bg-opacity-85 p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:max-w-md sm:max-w-sm"
       >
         <div className="mb-5">
           <label
@@ -228,7 +230,7 @@ const Register = () => {
             name="passwordConfirm"
             value={dataUser.passwordConfirm}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10" // Añade espacio para el botón
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
             placeholder="********"
             required
           />
@@ -276,7 +278,7 @@ const Register = () => {
               </svg>
             )}
           </button>
-          {error.passwordConfirm && (
+          {isSubmitted && error.passwordConfirm && (
             <span className="text-red-600">{error.passwordConfirm}</span>
           )}
         </div>
@@ -284,9 +286,9 @@ const Register = () => {
         <div className="mb-5">
           <label
             htmlFor="name"
-            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900"
           >
-            Tu Nombre Completo
+            Nombre
           </label>
           <input
             type="text"
@@ -294,39 +296,18 @@ const Register = () => {
             name="name"
             value={dataUser.name}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Nombre(s) y Apellido(s)"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Nombre Completo"
             required
           />
-          {error.name && <span className="text-red-600">{error.name}</span>}
-        </div>
-
-        <div className="mb-5">
-          <label
-            htmlFor="age  "
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
-          >
-            Edad
-          </label>
-          <input
-            type="text"
-            id="age"
-            name="age"
-            value={dataUser.age}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus :ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Only numbers greater than 18"
-            required
-          />
-          {error.age && <span className="text-red-600">{error.age}</span>}
         </div>
 
         <div className="mb-5">
           <label
             htmlFor="phone"
-            className="block mb-2 text-sm font-bold text-green-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900"
           >
-            Teléfono de Contacto
+            Teléfono
           </label>
           <input
             type="text"
@@ -334,37 +315,16 @@ const Register = () => {
             name="phone"
             value={dataUser.phone}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Only number 10 Characters"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Número de Teléfono"
             required
           />
-          {error.phone && <span className="text-red-600">{error.phone}</span>}
-        </div>
-
-        <div className="mb-5">
-          <label
-            htmlFor="city"
-            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
-          >
-            Ciudad
-          </label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={dataUser.city}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="En que Ciudad Vives"
-            required
-          />
-          {error.city && <span className="text-red-600">{error.city}</span>}
         </div>
 
         <div className="mb-5">
           <label
             htmlFor="address"
-            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900"
           >
             Dirección
           </label>
@@ -374,27 +334,53 @@ const Register = () => {
             name="address"
             value={dataUser.address}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Tu Dirección Completa Estado Calle Carrera  ..."
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Dirección"
             required
           />
-          {error.address && (
-            <span className="text-red-600">{error.address}</span>
-          )}
         </div>
 
-        <button
-          disabled={Object.values(error).some((err) => err)}
-          type="submit"
-          className={`mb-2 text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
-            Object.values(error).some((err) => err)
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-gray-900 hover:bg-gray-700"
-          }`}
-        >
-          Registrar
-        </button>
+        <div className="mb-5">
+          <label
+            htmlFor="city"
+            className="block mb-2 text-sm font-bold text-gray-900"
+          >
+            Ciudad
+          </label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value={dataUser.city}
+            onChange={handleChange}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Ciudad"
+            required
+          />
+        </div>
+
+        <div className="mb-5 flex items-center justify-between w-full">
+          <button
+            type="submit"
+            className="w-full h-12 bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+          >
+            Registrarse
+          </button>
+        </div>
+
+        <div className="mb-5">
+          <p className="text-center text-gray-500 text-sm">
+            ¿Ya tienes una cuenta?{" "}
+            <a
+              href="/login"
+              className="text-blue-500 hover:text-blue-700 font-bold"
+            >
+              Inicia Sesión
+            </a>
+          </p>
+        </div>
       </form>
+
       <AlertModal
         show={showModal}
         onClose={handleCloseModal}

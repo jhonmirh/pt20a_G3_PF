@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppointmentForm } from '@/components/AddApp/AddApp'
+import AppointmentForm from '@/components/AddApp/AddApp'
 const AppointmentPage = () => {
   return (
     <div>
