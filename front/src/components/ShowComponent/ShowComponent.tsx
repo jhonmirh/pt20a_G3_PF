@@ -6,7 +6,7 @@ const ShowComponent = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
 
   // Define las rutas donde no deseas mostrar el contenido
-  const hiddenPaths = ["/login", "/register"];
+  const hiddenPaths = ["/login", "/register", "/appointment"];
 
   // Si el pathname es igual a alguna de las rutas en hiddenPaths, devuelve null
   if (hiddenPaths.includes(pathName)) {
