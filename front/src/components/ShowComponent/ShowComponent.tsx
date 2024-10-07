@@ -3,11 +3,15 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 const ShowComponent = ({ children }: { children: React.ReactNode }) => {
-  // const pathName = usePathname();
+  const pathName = usePathname();
 
-  // if (pathName === "/login") {
-  //   return null; // Si la ruta es '/login', no mostramos nada
-  // }
+  // Define las rutas donde no deseas mostrar el contenido
+  const hiddenPaths = ["/login", "/register"];
+
+  // Si el pathname es igual a alguna de las rutas en hiddenPaths, devuelve null
+  if (hiddenPaths.includes(pathName)) {
+    return null; // No mostrar el navbar ni el sidebar
+  }
 
   return <div>{children}</div>;
 };
