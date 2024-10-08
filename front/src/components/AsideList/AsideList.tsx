@@ -13,12 +13,13 @@ const AsideList = async () => {
       .trim()
       .toLowerCase();
 
-    const imageObj = imageCategory.find((img) =>
-      img.name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim()
-        .toLowerCase() === normalizedCategoryName
+    const imageObj = imageCategory.find(
+      (img) =>
+        img.name
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim()
+          .toLowerCase() === normalizedCategoryName
     );
 
     return {
@@ -27,11 +28,15 @@ const AsideList = async () => {
       hoverImageUrl: imageObj ? imageObj.hoverImageUrl : "",
       description: imageObj ? imageObj.description : "",
       ribbonText: imageObj ? imageObj.ribbonText : "",
+      image: imageObj ? imageObj.image:"", 
+      price: "", 
     };
   });
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4"> {/* Cambiar las columnas y el espaciado */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
+      {" "}
+
       {categoriesWithImages &&
         categoriesWithImages.map((category) => (
           <AsideBar
@@ -43,6 +48,8 @@ const AsideList = async () => {
             hoverImageUrl={category.hoverImageUrl}
             description={category.description}
             ribbonText={category.ribbonText}
+            image={category.image} 
+            price={category.price}
           />
         ))}
     </div>

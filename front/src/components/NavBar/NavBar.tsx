@@ -156,7 +156,7 @@ export default function NavBar({ images }: NavBarProps) {
                 title="Your Appointment"
               >
                 <span className="ml-1 text-white hover:text-blue-500">
-                  Agregar
+                  Citas
                 </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

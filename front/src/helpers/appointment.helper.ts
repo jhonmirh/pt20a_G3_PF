@@ -4,6 +4,7 @@ import { IAppointmentData } from "@/interfaces/Appointment";
 const APIURL = process.env.NEXT_PUBLIC_API_URL
 
 export async function createAppointment(data: { date: string; description: string; user: string; categoryId: string }) {
+    console.log(data)
     try {
         const response = await fetch('http://localhost:3010/appointments', {
             method: 'POST',
@@ -15,14 +16,14 @@ export async function createAppointment(data: { date: string; description: strin
 
         if (!response.ok) {
             const errorData = await response.json();
-            const errorMessage = Array.isArray(errorData.message) ? errorData.message.join(", ") : errorData.message; // Verificar si es un array
+            const errorMessage = Array.isArray(errorData.message) ? errorData.message.join(", ") : errorData.message; 
             throw new Error(`Failed to create appointment: ${errorMessage}`);
         }
 
         return await response.json();
     } catch (error) {
         console.error("Error creando la cita:", error);
-        throw error; // Vuelve a lanzar el error para que pueda ser manejado más arriba
+        throw error; 
     }
 }
 
@@ -45,7 +46,7 @@ export const updateAppointment = async (id: string, appointmentData: IAppointmen
 };
 
 export const getUserAppointments = async (userId: string) => {
-    const res = await fetch(`/api/appointments/user/${userId}`);
+    const res = await fetch(`${APIURL}/appointments/${userId}/appointments`);
     if (!res.ok) {
         throw new Error("Error al obtener las citas del usuario");
     }
@@ -53,7 +54,7 @@ export const getUserAppointments = async (userId: string) => {
 };
 
 export const cancelAppointment = async (appointmentId: string) => {
-    const res = await fetch(`/api/appointments/${appointmentId}`, {
+    const res = await fetch(`${APIURL}/appointments/${appointmentId}`, {
         method: 'DELETE',
     });
     if (!res.ok) {
@@ -62,7 +63,7 @@ export const cancelAppointment = async (appointmentId: string) => {
 };
 
 export const getAllAppointments = async () => {
-    const res = await fetch('/api/appointments');
+    const res = await fetch(`${APIURL}/appointments`);
     if (!res.ok) {
         throw new Error("Error al obtener todas las citas");
     }
@@ -70,7 +71,7 @@ export const getAllAppointments = async () => {
 };
 
 export const deleteAppointments = async (appointmentIds: string[]) => {
-    const res = await fetch('/api/appointments/delete-many', {
+    const res = await fetch(`${APIURL}/appointments/delete-many`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -81,3 +82,16 @@ export const deleteAppointments = async (appointmentIds: string[]) => {
         throw new Error("Error al eliminar múltiples citas");
     }
 };
+
+
+//////////////////////// ME MATO ESTO 
+
+
+export async function getAppointments(userId:string) {
+    const response = await fetch(`${APIURL}/appointments/${userId}/appointments`);
+    if (!response.ok) {
+      throw new Error('Error fetching appointments');
+    }
+    return await response.json();
+  }
+  

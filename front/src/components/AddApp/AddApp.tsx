@@ -1,66 +1,65 @@
-"use client";
 
-import React, { useState, useEffect } from "react";
+'use client'
+
+import React, { useState } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
 import { createAppointment } from "@/helpers/appointment.helper";
 import { useLoggin } from "@/context/logginContext";
 import AlertModal from "../Alert/AlertModal";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const AppointmentForm = () => {
   const { userData } = useLoggin();
-  const [appointmentData, setAppointmentData] = useState<IAppointmentData>({
-    id: "",
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryId: string = searchParams.get('categoryId') || ''; // Siempre obtener de los parámetros de la URL
+
+  const initialData: IAppointmentData = {
     date: "",
     description: "",
-    userId: userData?.userData?.id || "",
-    categoryId: "",
-  });
+    user  : userData?.userData?.id || "",
+    categoryId: categoryId, // Usa el categoryId correctamente desde los parámetros
+  };
 
-  const [showModifyDelete, setShowModifyDelete] = useState(false);
+  const [appointmentData, setAppointmentData] = useState<IAppointmentData>(initialData);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState({ title: "", message: "" });
 
-  // Nuevo useEffect para obtener el productId desde localStorage y asignarlo
-  useEffect(() => {
-    const productData = localStorage.getItem("appointment");
-    let categoryId = "";
-
-    try {
-      if (productData) {
-        const parsedProductData = JSON.parse(productData);
-        if (Array.isArray(parsedProductData)) {
-          categoryId = parsedProductData[0]; // Suponiendo que el primer elemento es el categoryId
-        } else {
-          categoryId = parsedProductData; // Si no es un array, úsalo directamente
-        }
-      }
-    } catch (error) {
-      console.error("Error parsing product data from localStorage", error);
-    }
-
-    setAppointmentData(prevData => ({
-      ...prevData,
-      categoryId: categoryId
-      }));
-  }, []);
-
-
   const handleAddAppointment = async () => {
-    const appointmentData = {
-        date: '2024-10-08T21:09',
-        description: 'sdfsdfdf',
-        user: 'f885c803-1e3f-4bda-9ce3-dfaa7ad650c6',
-        categoryId: 'c7111440-c052-419d-9a2b-387908f2549b', // Cambia a categoryId
-    };
-
     try {
-        const newAppointment = await createAppointment(appointmentData);
-        console.log('Cita creada:', newAppointment);
+      const userIdObject = {
+        id: userData?.userData?.id,   // UUID del usuario
+        name: userData?.userData?.name || '', // Si está disponible
+        email: userData?.userData?.email || '',
+        password: '',  // Puedes decidir si incluir esto o no
+        age: userData?.userData?.age || 0,  // Asegúrate de incluir un valor predeterminado si no existe
+        phone: userData?.userData?.phone || 0,
+        city: userData?.userData?.city || '',
+        address: userData?.userData?.address || ''
+      };
+  
+      const categoryObject = {
+        id: appointmentData.categoryId,  // UUID de la categoría
+        name: ''  // Si tienes el nombre de la categoría, lo puedes incluir aquí
+      };
+  
+      const appointmentPayload = {
+        date: appointmentData.date,
+        description: appointmentData.description,
+        user: userData?.userData?.id || '',  // UUID del usuario
+        categoryId: appointmentData.categoryId,  // UUID de la categoría
+        userId: userIdObject,  // Objeto con detalles del usuario
+        category: categoryObject // Objeto con detalles de la categoría
+      };
+  
+      const newAppointment = await createAppointment(appointmentPayload);
+      console.log('Cita creada:', newAppointment);
     } catch (error) {
-        console.error('Error creando la cita:', error);
+      console.error('Error creando la cita:', error);
     }
-};
-
+  };
+  
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAppointmentData((prevData) => ({
@@ -98,7 +97,6 @@ const AppointmentForm = () => {
         required
       />
 
-      {/* Botones */}
       <div className="flex justify-around mt-6">
         <button
           onClick={handleAddAppointment}
@@ -106,17 +104,6 @@ const AppointmentForm = () => {
         >
           Agregar Cita
         </button>
-
-        {showModifyDelete && (
-          <>
-            <button className="bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors">
-              Modificar Cita
-            </button>
-            <button className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-400 transition-colors">
-              Eliminar Cita
-            </button>
-          </>
-        )}
       </div>
 
       <AlertModal

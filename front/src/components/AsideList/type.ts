@@ -6,6 +6,8 @@
       hoverImageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727490634/categorias/fbopo7dp6rrar2yqepmk.svg",
       description:"Laptop, de Escritorio, Recuperación de Información y mucho mas ...",
       ribbonText:"Conoce más de nuestro servicio",
+      image:"",
+      price:"",
     },
     {
       id: 2,
@@ -14,6 +16,8 @@
       hoverImageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727491658/categorias/titzmgainzjinarggbxv.svg",
       description:"Tinta Continua, Laser, Recuperamos tu Impresora...",
       ribbonText:"Atención Garantizada",
+      image:"",
+      price:"",
     },
     {
       id: 3,
@@ -22,6 +26,8 @@
       hoverImageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727490633/categorias/mghl2nqf42htqrnwjy9c.svg",
       description:"Solucion Certificada CCNA, Interiores y Exteriores Conozca nuestro servicio ...",
       ribbonText:"Certificado CCNA ",
+      image:"",
+      price:"",
     },
     {
       id: 4,
@@ -30,6 +36,8 @@
       hoverImageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727543967/categorias/o4j9snbujzkujjvfthos.svg",
       description:"Si tu ABA, o Cualquier linea residencial te esta fallando nosotros te Atendemos ...",
       ribbonText:"ABA, Norte, Starlik",
+      image:"",
+      price:"",
     },
     {
       id: 5,
@@ -38,6 +46,8 @@
       hoverImageUrl: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727490633/categorias/ynjyreuvwaohhjxnszt0.svg",
       description:"El Mejor Sistema de Gestion Escolar Módular y Distribuido, Conozcalo ...",
       ribbonText:"Conoce más de nuestro Sistema",
+      image:"",
+      price:"",
     },
     {
       id: 6,
@@ -46,6 +56,8 @@
       hoverImageUrl:"https://res.cloudinary.com/dgsk4faek/image/upload/v1727490630/categorias/fgrmvrw6euon8yfkiefu.svg",
       description:"Planificacion, Manejo Automatizado de Evaluación y Control de Estudi y mas...",
       ribbonText:"Planes de Estudio y AsC",
+      image:"",
+      price:"",
     },
 
   ];
