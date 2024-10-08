@@ -31,19 +31,22 @@ export async function createAppointment(data: { date: string; description: strin
   
   
 
-export const updateAppointment = async (id: string, appointmentData: IAppointmentData) => {
-    const res = await fetch(`${APIURL}/appointments/${id}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(appointmentData),
+export const updateAppointment = async (id: string, data: { description: string, date: string }) => {
+    const response = await fetch(`${APIURL}/appointments/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     });
-    if (!res.ok) {
-        throw new Error("Error al actualizar la cita");
+  
+    if (!response.ok) {
+      throw new Error(`Error actualizando la cita: ${response.statusText}`);
     }
-    return await res.json();
-};
+  
+    return await response.json();
+  };
+  
 
 export const getUserAppointments = async (userId: string) => {
     const res = await fetch(`${APIURL}/appointments/${userId}/appointments`);

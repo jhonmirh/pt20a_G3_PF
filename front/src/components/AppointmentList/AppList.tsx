@@ -1,15 +1,21 @@
 
 'use client'
-import { useEffect, useState } from 'react';
-import { getAppointments } from '@/helpers/appointment.helper';
-import { useLoggin } from '@/context/logginContext';
-import AppointmentProps from './types';
 
+
+
+import { useEffect, useState } from 'react';
+import { getAppointments, updateAppointment } from '@/helpers/appointment.helper'; // update helper for updating appointment
+import { useLoggin } from '@/context/logginContext';
+// import AppointmentProps from './types';
+import EditAppointmentForm from '../EditAppointment/EditAppointmentForm';
+import AppointmentProps from '@/interfaces/Appointment';
 const AppList: React.FC = () => {
   const { userData } = useLoggin();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  
+  const [editingAppointment, setEditingAppointment] = useState<AppointmentProps | null>(null); // State for editing
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -28,18 +34,31 @@ const AppList: React.FC = () => {
     fetchAppointments();
   }, [userData]);
 
+  // Handler for opening the edit form
+  const handleEditClick = (appointment: AppointmentProps) => {
+    setEditingAppointment(appointment);
+  };
+
+
+  const handleSave = async (updatedAppointment: AppointmentProps) => {
+    try {
+      await updateAppointment(updatedAppointment.id, {
+        description: updatedAppointment.description,
+        date: updatedAppointment.date,
+      });
+      setAppointments(prev => prev.map(app => app.id === updatedAppointment.id ? updatedAppointment : app));
+      setEditingAppointment(null); // Close the form
+    } catch (err) {
+      console.error("Error updating appointment", err);
+    }
+  };
+
   if (loading) return <p>Cargando citas...</p>;
   if (error) return <p>Error: {error}</p>;
-  console.log(appointments);
 
   return (
     <div className="container mx-auto mt-10">
-      
-      
-      
       <h1 className="text-3xl font-bold mb-5">Tus Citas</h1>
-      
-      
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {appointments.map((appointment) => (
@@ -56,11 +75,26 @@ const AppList: React.FC = () => {
             </div>
             <div className="text-gray-700">
               <p><strong>Categoría:</strong> {appointment.category.name}</p>
-              <p><strong>Descripción de categoría:</strong> {appointment.category.description}</p>
             </div>
+            {/* Edit button */}
+            <button
+              onClick={() => handleEditClick(appointment)}
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition-all"
+            >
+              Editar
+            </button>
           </div>
         ))}
       </div>
+
+      {/* Conditional rendering for the edit form */}
+      {editingAppointment && (
+        <EditAppointmentForm
+          appointment={editingAppointment}
+          onSave={handleSave}
+          onCancel={() => setEditingAppointment(null)}
+        />
+      )}
     </div>
   );
 };
