@@ -12,23 +12,23 @@ const Agg = ({ category }: { category: ICategory }) => {
   const router = useRouter();
 
   const handleClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Evitar que el clic se propague
+    event.stopPropagation(); 
 
     try {
       const appointmentIds: string[] = JSON.parse(localStorage.getItem("appointment") || "[]");
 
-      // Verificamos si el id del producto ya está en las citas
+      
       const isProductInAppointment = appointmentIds.includes(category.id);
 
       if (isProductInAppointment) {
-        // Mostrar modal si el producto ya está en las citas
+        
         setModalContent({
           title: "Revisa tus Citas",
           message: "El Servicio Tiene Citas Pendientes",
         });
         setShowModal(true);
       } else {
-        // Redirigir al formulario con el categoryId como parámetro en la URL
+        
         router.push(`/appointment?categoryId=${category.id}`);
       }
     } catch (error) {

@@ -12,13 +12,13 @@ const AppointmentForm = () => {
   const { userData } = useLoggin();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const categoryId: string = searchParams.get('categoryId') || ''; // Siempre obtener de los parámetros de la URL
+  const categoryId: string = searchParams.get('categoryId') || ''; 
 
   const initialData: IAppointmentData = {
     date: "",
     description: "",
     user  : userData?.userData?.id || "",
-    categoryId: categoryId, // Usa el categoryId correctamente desde los parámetros
+    categoryId: categoryId, 
   };
 
   const [appointmentData, setAppointmentData] = useState<IAppointmentData>(initialData);
@@ -28,28 +28,28 @@ const AppointmentForm = () => {
   const handleAddAppointment = async () => {
     try {
       const userIdObject = {
-        id: userData?.userData?.id,   // UUID del usuario
-        name: userData?.userData?.name || '', // Si está disponible
+        id: userData?.userData?.id,   
+        name: userData?.userData?.name || '', 
         email: userData?.userData?.email || '',
-        password: '',  // Puedes decidir si incluir esto o no
-        age: userData?.userData?.age || 0,  // Asegúrate de incluir un valor predeterminado si no existe
+        password: '',  
+        age: userData?.userData?.age || 0,  
         phone: userData?.userData?.phone || 0,
         city: userData?.userData?.city || '',
         address: userData?.userData?.address || ''
       };
   
       const categoryObject = {
-        id: appointmentData.categoryId,  // UUID de la categoría
-        name: ''  // Si tienes el nombre de la categoría, lo puedes incluir aquí
+        id: appointmentData.categoryId,  
+        name: ''  
       };
   
       const appointmentPayload = {
         date: appointmentData.date,
         description: appointmentData.description,
-        user: userData?.userData?.id || '',  // UUID del usuario
-        categoryId: appointmentData.categoryId,  // UUID de la categoría
-        userId: userIdObject,  // Objeto con detalles del usuario
-        category: categoryObject // Objeto con detalles de la categoría
+        user: userData?.userData?.id || '',  
+        categoryId: appointmentData.categoryId,  
+        userId: userIdObject,  
+        category: categoryObject 
       };
   
       const newAppointment = await createAppointment(appointmentPayload);
