@@ -54,14 +54,14 @@ export interface IOrder {
 export interface userSession {
     token: string;
     userData: {
-        id: number;
+        // id: number;
         name: string;
         email: string;
-        age: number;
-        password: string;
+        // age: number;
+        // password: string;
         phone: string;
-        address: string;
-        city: string;
-        orders: IOrder [];
+        // address: string;
+        // city: string;
+        //orders: IOrder [];
     }
 }

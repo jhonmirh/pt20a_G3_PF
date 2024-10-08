@@ -58,9 +58,20 @@ import { getProducts } from "@/helpers/product.helper";
 import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
 import ShowComponent from "@/components/ShowComponent/ShowComponent";
+import { GoogleOAuthProvider} from "@react-oauth/google";
 import "./globals.css";
 import AsideList from "@/components/AsideList/AsideList";
 const inter = Inter({ subsets: ["latin"] });
+
+
+const clientId = process.env.GOOGLE_CLIENT_ID || ""
+
+console.log("ClientId:",process.env.GOOGLE_CLIENT_ID);
+
+if (!clientId) {
+  console.error("Google Client ID no está definido. Verifica tus variables de entorno.");
+}
+
 
 export const metadata: Metadata = {
   title: "Soluciones JhonDay",
@@ -90,6 +101,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col h-screen w-full`}>
+        {/* GoogleOAuthProvider para la autenticación con Google */}
+        <GoogleOAuthProvider clientId={clientId}>
+          {/* AuthProvider para manejar la autenticación en el contexto */}
         <LogginProvider>
           <ShowComponent>
             <NavBar images={images} />
@@ -104,6 +118,7 @@ export default async function RootLayout({
           </ShowComponent>
           <Footer />
         </LogginProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

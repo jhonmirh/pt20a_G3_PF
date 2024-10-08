@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { useLoggin } from "@/context/logginContext";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/helpers/auth.helper";
+import { loginUser, loginWithGoogle } from "@/helpers/auth.helper";
 import { validateLogin, validatePassword } from "@/helpers/validate";
 import { ILogin, ILoginError } from "@/interfaces/LoginRegister";
 import AlertModalLogin from "../AlertLgin/AlertModalLogin";
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
+  const { loginWithGoogle } = useLoggin();
   const { userData, setUserData } = useLoggin();
   const router = useRouter();
   const startState: ILogin = { email: "", password: "" };
@@ -16,6 +18,58 @@ const Login = () => {
   const [error, setError] = useState<ILoginError>({});
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
+
+
+  // Función para manejar el login con Google
+  const handleGoogleLoginSuccess = async (response: any) => {
+  try {
+    const token = response.credential;
+    console.log("Google Token:", token);
+
+    const googleLoginResponse = await loginWithGoogle({ credential: token });
+
+    const { user, token: authToken } = googleLoginResponse;
+
+    if (!user.name || !user.email || !user.phone) {
+      console.error("Faltan datos del usuario en la respuesta:", user);
+      return;
+    }
+
+    //console.log("googleLoginRespone", googleLoginResponse)
+
+
+    // Actualizar el contexto con la información del usuario
+    setUserData({ token: authToken, userData: user });
+
+    localStorage.setItem("sessionStart", JSON.stringify({ token: authToken, userData: user }));
+
+    console.log("User Data set:", { token: authToken, userData: user });
+
+    
+  
+    setModalContent({
+      title: "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
+      message: "Login con Google exitoso",
+    });
+    setShowModal(true);
+  } catch (error: any) {
+    console.error("Error during Google Login:", error);
+    setModalContent({
+      title: "Error",
+      message: error.message || "Un error inesperado ocurrió durante el login con Google.",
+    });
+    setShowModal(true);
+  }
+};
+
+const handleGoogleLoginFailure = () => {
+  setModalContent({
+    title: "Error",
+    message: "Login con Google fallido. Intente nuevamente.",
+  });
+  setShowModal(true);
+};
+
 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,6 +278,15 @@ if(userData?.token){
           Ingresar
         </button>
       </form>
+
+    {/* Botón para login con Google */}
+    <div className="mt-4">
+        <GoogleLogin
+          onSuccess={handleGoogleLoginSuccess}
+          onError={handleGoogleLoginFailure}
+        />
+      </div>
+
 
       <AlertModalLogin
         show={showModal}

@@ -14,6 +14,11 @@ const DataUser = () => {
     message: "",
   });
 
+
+  useEffect(() => {
+    console.log("User Data:", userData?.userData);
+  }, [userData?.userData]);
+
   useEffect(() => {
     if (!userData) {
       setModalContent({
@@ -22,7 +27,7 @@ const DataUser = () => {
       });
       setShowModal(true); 
     }
-  }, [userData]);
+  }, [userData?.userData]);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -40,6 +45,8 @@ const DataUser = () => {
     );
   }
 
+  const { name, email, phone } = userData?.userData || {};
+
   return (
     <>
       <hr className="border-t-4 border-green-950 my-4 mx-auto w-full sm:w-3/4 lg:w-1/2" />
@@ -53,17 +60,17 @@ const DataUser = () => {
 
       <div className="flex flex-col justify-between m-10 p-4 max-w-xs w-full bg-white border border-gray-200 rounded-lg shadow-lg shadow-green-800 dark:bg-green-800 dark:border-gray-700">
         <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.name}
+          {name || "Sin datos"}
         </span>
         <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.email}
+          {email || "Sin datos"}
         </span>
         <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.phone}
+          {phone || "Sin datos"} 
         </span>
-        <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.ordes}
-        </span>
+        {/* <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData.ordes || "N/A"}
+        </span> */}
       </div>
     </>
   );

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import SignOutConfirmation from "../SignOutConfirmation/SignOutConfirmation";
 import Carousel from "../Carousel/Carousel";
 import { useLoggin } from "@/context/logginContext";
+//import LoginWithGoogle from "../Auth/LoginWithGoogle";
 
 
 
@@ -32,7 +33,7 @@ export default function NavBar({ images }: NavBarProps) {
     router.push("/");
   };
 
- 
+
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
       router.push(`/search?query=${searchTerm}`);

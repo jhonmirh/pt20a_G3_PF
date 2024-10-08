@@ -5,11 +5,15 @@ import { userSession } from "@/interfaces/LoginRegister";
 export interface LogginContextProps {
   userData: userSession | null;
   setUserData: (userData: userSession | null) => void;
+  loginWithGoogle: (googleUserData: { credential: string }) => Promise<{ user: any, token: string }>;
 }
 
 export const LogginContext = createContext<LogginContextProps>({
   userData: null,
   setUserData: () => {},
+  loginWithGoogle: async () => {
+    return { user: {}, token: "" };
+  },
 });
 
 export interface LogginProviderProps {
@@ -18,6 +22,44 @@ export interface LogginProviderProps {
 
 export const LogginProvider: React.FC<LogginProviderProps> = ({ children }) => {
   const [userData, setUserData] = useState<userSession | null>(null);
+
+
+// Función de inicio de sesión con Google
+const loginWithGoogle = async (googleUserData: { credential: string }) : Promise<{ user: any, token: string }>=> {
+  try {
+    const response = await fetch(`http://localhost:3010/auth/google-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: googleUserData.credential }),
+      
+    });
+    
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const userData = await response.json();
+
+    console.log("Response data:", userData);
+
+    const newUser = {
+      token: userData.token,
+      user: {
+        name: userData.userData.name || "Sin datos", // O asigna un valor predeterminado si falta
+        email: userData.userData.email || "Sin datos",
+        phone: userData.userData.phone || "Sin datos",
+      },
+    };
+
+    console.log("Formatted User Data:", newUser);
+
+    return newUser;
+  } catch (error) {
+    console.error("Error al iniciar sesión con Google:", error);
+    throw error; // Lanza el error para que se maneje en handleGoogleLoginSuccess
+  }
+};
 
   useEffect(() => {
     if (userData) {
@@ -29,21 +71,24 @@ export const LogginProvider: React.FC<LogginProviderProps> = ({ children }) => {
   }, [userData]);
 
   useEffect(() => {
-    const userData = localStorage.getItem("sessionStart");
-    if (userData) {
+    const storedUserData = localStorage.getItem("sessionStart");
+    if (storedUserData) {
       try {
-        setUserData(JSON.parse(userData));
+        setUserData(JSON.parse(storedUserData));
       } catch (error) {
         console.error("Error parsing session data:", error);
         setUserData(null);
       }
     }
   }, []);
+
+
   return (
-    <LogginContext.Provider value={{ userData, setUserData }}>
+    <LogginContext.Provider value={{ userData, setUserData, loginWithGoogle }}>
       {children}
     </LogginContext.Provider>
   );
 };
 
 export const useLoggin = () => useContext(LogginContext);
+

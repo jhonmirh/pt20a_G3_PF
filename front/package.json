@@ -13,6 +13,7 @@
     "@babel/core": "^7.25.2",
     "@headlessui/react": "^2.1.3",
     "@heroicons/react": "^2.1.5",
+    "@react-oauth/google": "^0.12.1",
     "front": "file:",
     "next": "^14.2.13",
     "next-cloudinary": "^6.13.0",
@@ -21,7 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
