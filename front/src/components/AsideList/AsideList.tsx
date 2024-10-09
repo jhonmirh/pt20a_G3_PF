@@ -28,30 +28,27 @@ const AsideList = async () => {
       hoverImageUrl: imageObj ? imageObj.hoverImageUrl : "",
       description: imageObj ? imageObj.description : "",
       ribbonText: imageObj ? imageObj.ribbonText : "",
-      image: imageObj ? imageObj.image:"", 
-      price: "", 
+      image: imageObj ? imageObj.image: "", 
+      price: category.price || "0.00", // Adjust based on your data structure
     };
   });
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-      {" "}
-
-      {categoriesWithImages &&
-        categoriesWithImages.map((category) => (
-          <AsideBar
-            key={category.id}
-            id={category.id}
-            name={category.name}
-            categoryId={category.id}
-            imageUrl={category.imageUrl}
-            hoverImageUrl={category.hoverImageUrl}
-            description={category.description}
-            ribbonText={category.ribbonText}
-            image={category.image} 
-            price={category.price}
-          />
-        ))}
+      {categoriesWithImages && categoriesWithImages.map((category) => (
+        <AsideBar
+          key={category.id}
+          id={category.id}
+          name={category.name}
+          price={category.price}
+          categoryId={category.id}
+          imageUrl={category.imageUrl}
+          hoverImageUrl={category.hoverImageUrl}
+          description={category.description}
+          ribbonText={category.ribbonText}
+          image={category.image} 
+        />
+      ))}
     </div>
   );
 };

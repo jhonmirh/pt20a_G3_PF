@@ -1,39 +1,28 @@
-"use client";
-import React, { useState } from "react";
-import { AlertModalProps } from "./types";
-import { userSession } from "@/interfaces/LoginRegister";
-import { useLoggin } from "@/context/logginContext";
+// AlertModal.tsx
+import React from "react";
 
-const AlertModal: React.FC<AlertModalProps> = ({
-  show,
-  onClose,
-  title,
-  message,
-}) => {
-  const { userData } = useLoggin();
+interface AlertModalProps {
+    showModal: boolean;
+    handleClose: () => void;
+    title: string;
+    message: string;
+}
 
-  if (!show) return null;
+const AlertModal: React.FC<AlertModalProps> = ({ showModal, handleClose, title, message }) => {
+    if (!showModal) return null;
 
-  return (
-    <>
-   
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 max-w-md mx-auto shadow-[0_4px_6px_rgba(0,0,0,0.3),0_2px_4px_rgba(59,197,59,0.9)]">
-            <h2 className="text-2xl font-bold text-red-600 mb-4 text-center">
-              ⚠️ {title}
-            </h2>
-            <p className="text-lg text-gray-800 mb-6 text-center">{message}</p>
-            <button
-              onClick={onClose}
-              className="w-full py-2 px-4 bg-lime-500 hover:bg-green-950 text-white rounded-md transition-colors duration-300"
-            >
-              Close
-            </button>
-          </div>
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black opacity-50" onClick={handleClose}></div>
+            <div className="bg-white rounded-lg shadow-lg p-6 z-10">
+                <h2 className="text-lg font-bold">{title}</h2>
+                <p>{message}</p>
+                <button onClick={handleClose} className="mt-4 bg-blue-500 text-white rounded px-4 py-2">
+                    Cerrar
+                </button>
+            </div>
         </div>
-   
-    </>
-  );
+    );
 };
 
 export default AlertModal;

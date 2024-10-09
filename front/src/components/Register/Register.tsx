@@ -1,10 +1,82 @@
-"use client";
+'use client'
+import { ILogin, ILoginError, IRegister, TRegisterError } from "@/interfaces/LoginRegister";
 import { registerUser } from "@/helpers/auth.helper";
-import { validateRegisterLogin } from "@/helpers/validate";
-import { IRegister, TRegisterError } from "@/interfaces/LoginRegister";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import AlertModal from "../Alert/AlertModal";
+
+// Validation functions
+export function validatePassword(password: string): string | undefined {
+    if (password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+        return "El password debe contener al menos un carácter especial, un número, una letra mayúscula y una letra minúscula y tener al menos ocho caracteres.";
+    }
+    return undefined; 
+}
+
+export function validateLogin(values: ILogin): ILoginError {
+    const errors: ILoginError = {};
+    if (!values.email) {
+        errors.email = "Email es Requerido.";
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
+        errors.email = "Invalid email address.";
+    }
+    return errors;
+}
+
+export function validateRegisterLogin(values: IRegister): TRegisterError {
+    const errors: TRegisterError = {};
+    
+    if (!values.email) {
+        errors.email = "Email es Requerido.";
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
+        errors.email = "Invalid email address.";
+    }
+
+    if (!values.password) {
+        errors.password = "Password es Requerido.";
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/.test(values.password)) {
+        errors.password = "La contraseña debe contener al menos un carácter especial, un número, una letra mayúscula y una letra minúscula y tener al menos ocho caracteres.";
+    }
+
+    if (!values.passwordConfirm) {
+        errors.passwordConfirm = "Password es Requerido.";
+    } else if (values.password !== values.passwordConfirm) {
+        errors.passwordConfirm = "Password no Coinciden.";
+    }
+
+    if (!values.name) {
+        errors.name = "Nombre es Requerido.";
+    } else if (!/^[a-zA-Z\s]{3,30}$/.test(values.name)) {
+        errors.name = "El nombre debe contener entre 3 y 30 caracteres.";
+    }
+
+    if (values.phone === undefined) {
+        errors.phone = "Número Telefónico es Requerido.";
+    } else if (typeof values.phone !== 'number' || !/^\d{10}$/.test(values.phone.toString())) {
+        errors.phone = "El número de teléfono debe ser numérico y tener 10 dígitos.";
+    }
+
+    if (values.age === undefined || values.age === null) {
+        errors.age = "Edad es Requerido.";
+    } else if (typeof values.age !== 'number' || values.age < 18 || values.age > 99 || !/^\d{2}$/.test(values.age.toString())) {
+        errors.age = "La edad debe ser un número de dos dígitos mayor o igual a 18";
+    }
+
+    if (!values.city) {
+        errors.city = "Ciuda es Requerido.";
+    } else if (!/^[a-zA-Z]{3,30}$/.test(values.city)) {
+        errors.city = "La ciudad debe contener sólo letras y tener entre 3 y 30 caracteres.";
+    }
+
+    if (!values.address) {
+        errors.address = "Dirección es Requerido.";
+    } else if (!/^[a-zA-Z0-9\s\.,_-áéíóúÁÉÍÓÚñÑ]{3,30}$/.test(values.address)) {
+        errors.address = "La dirección debe contener entre 3 y 30 caracteres";
+    }
+
+    return errors;
+}
+
 
 const Register = () => {
   const startState: IRegister = {
@@ -22,40 +94,37 @@ const Register = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
-
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-
   const [dataUser, setData] = useState<IRegister>(startState);
-  const [error, setError] = useState<TRegisterError>({
-    email: "",
-    password: "",
-    passwordConfirm: "",
-  });
+  const [error, setError] = useState<TRegisterError>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    const newValue =
-      name === "age" || name === "phone" ? (value ? Number(value) : "") : value;
+    const newValue = name === "age" || name === "phone" ? (value ? Number(value) : "") : value;
 
     setData((prevState) => ({
       ...prevState,
       [name]: newValue,
     }));
 
-    if (isSubmitted) {
-      const updatedErrors = validateRegisterLogin({
-        ...dataUser,
-        [name]: newValue,
-      });
+    // Update the errors based on current input
+    const updatedErrors = validateRegisterLogin({
+      ...dataUser,
+      [name]: newValue,
+    });
 
-      if (updatedErrors.password !== dataUser.passwordConfirm) {
+
+    if (name === "passwordConfirm") {
+      if (newValue !== dataUser.password) {
         updatedErrors.passwordConfirm = "Password no Coinciden";
+      } else {
+        delete updatedErrors.passwordConfirm; 
       }
-
-      setError(updatedErrors);
     }
+
+    setError(updatedErrors);
   };
 
   const toggleShowPassword = () => {
@@ -68,7 +137,7 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitted(true); // Mark form as submitted to trigger error messages
 
     const validationErrors = validateRegisterLogin(dataUser);
 
@@ -84,16 +153,18 @@ const Register = () => {
     try {
       const response = await registerUser(dataUser);
       console.log("Usuario Registrado Ingresa con tus Datos:", response);
+      setModalContent({
+        title: "Éxito",
+        message: "Usuario registrado satisfactoriamente. Por favor, inicia sesión.",
+      });
+      setShowModal(true);
+      setTimeout(() => {
+        handleCloseModal();
+      }, 2000);
     } catch (error: any) {
       console.error(error);
-
-      const errorMessage =
-        error.message || "Se produjo un error inesperado durante el registro.";
-
-      setModalContent({
-        title: "Error",
-        message: errorMessage,
-      });
+      const errorMessage = error.message || "Se produjo un error inesperado durante el registro.";
+      setModalContent({ title: "Error", message: errorMessage });
       setShowModal(true);
     }
   };
@@ -102,18 +173,6 @@ const Register = () => {
     setShowModal(false);
     router.push("/login");
   };
-
-  useEffect(() => {
-    if (isSubmitted) {
-      const validationErrors = validateRegisterLogin(dataUser);
-
-      if (dataUser.password !== dataUser.passwordConfirm) {
-        validationErrors.passwordConfirm = "Password no Coinciden.";
-      }
-
-      setError(validationErrors);
-    }
-  }, [dataUser, isSubmitted]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
@@ -142,144 +201,11 @@ const Register = () => {
             name="email"
             value={dataUser.email}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="nombreCorreo@xxx.com"
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.email ? 'border-red-500' : 'border-gray-300'}`}
             required
           />
           {isSubmitted && error.email && (
-            <span className="text-red-600">{error.email}</span>
-          )}
-        </div>
-
-        <div className="mb-5 relative">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-bold text-green-900"
-          >
-            Tu Password
-          </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={dataUser.password}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="8 Caractéres, Minímo => 1 letra Máyuscula, 1 Letra Minúscula,1 Numero, 1 Digito Especial "
-            required
-          />
-          <button
-            type="button"
-            onClick={toggleShowPassword}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-            style={{ marginRight: "0.5rem", marginTop: "1.7rem" }}
-          >
-            {showPassword ? (
-              <svg
-                className="h-5 w-5 text-gray-500"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.083.326-.17.649-.264.969"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="h-5 w-5 text-gray-500"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 01.637-2.08M8.25 6.218a3 3 0 014.5 0M9 12a3 3 0 006 0M4.338 4.338l15.324 15.324"
-                />
-              </svg>
-            )}
-          </button>
-          {isSubmitted && error.password && (
-            <span className="text-red-600">{error.password}</span>
-          )}
-        </div>
-
-        <div className="mb-5 relative">
-          <label
-            htmlFor="passwordConfirm"
-            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
-          >
-            Confirma Tu password
-          </label>
-          <input
-            type={showPasswordConfirm ? "text" : "password"}
-            id="passwordConfirm"
-            name="passwordConfirm"
-            value={dataUser.passwordConfirm}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
-            placeholder="********"
-            required
-          />
-          <button
-            type="button"
-            onClick={toggleShowPasswordConfirm}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-            style={{ marginRight: "0.5rem", marginTop: "1.7rem" }}
-          >
-            {showPasswordConfirm ? (
-              <svg
-                className="h-5 w-5 text-gray-500"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-.083.326-.17.649-.264.969"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="h-5 w-5 text-gray-500"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 01.637-2.08M8.25 6.218a3 3 0 014.5 0M9 12a3 3 0 006 0M4.338 4.338l15.324 15.324"
-                />
-              </svg>
-            )}
-          </button>
-          {isSubmitted && error.passwordConfirm && (
-            <span className="text-red-600">{error.passwordConfirm}</span>
+            <p className="text-red-500 text-sm">{error.email}</p>
           )}
         </div>
 
@@ -296,10 +222,33 @@ const Register = () => {
             name="name"
             value={dataUser.name}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Nombre Completo"
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.name ? 'border-red-500' : 'border-gray-300'}`}
             required
           />
+          {isSubmitted && error.name && (
+            <p className="text-red-500 text-sm">{error.name}</p>
+          )}
+        </div>
+
+        <div className="mb-5">
+          <label
+            htmlFor="age"
+            className="block mb-2 text-sm font-bold text-gray-900"
+          >
+            Edad
+          </label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            value={dataUser.age}
+            onChange={handleChange}
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.age ? 'border-red-500' : 'border-gray-300'}`}
+            required
+          />
+          {isSubmitted && error.age && (
+            <p className="text-red-500 text-sm">{error.age}</p>
+          )}
         </div>
 
         <div className="mb-5">
@@ -310,34 +259,17 @@ const Register = () => {
             Teléfono
           </label>
           <input
-            type="text"
+            type="number"
             id="phone"
             name="phone"
             value={dataUser.phone}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Número de Teléfono"
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.phone ? 'border-red-500' : 'border-gray-300'}`}
             required
           />
-        </div>
-
-        <div className="mb-5">
-          <label
-            htmlFor="address"
-            className="block mb-2 text-sm font-bold text-gray-900"
-          >
-            Dirección
-          </label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            value={dataUser.address}
-            onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Dirección"
-            required
-          />
+          {isSubmitted && error.phone && (
+            <p className="text-red-500 text-sm">{error.phone}</p>
+          )}
         </div>
 
         <div className="mb-5">
@@ -353,27 +285,97 @@ const Register = () => {
             name="city"
             value={dataUser.city}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Ciudad"
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.city ? 'border-red-500' : 'border-gray-300'}`}
             required
           />
+          {isSubmitted && error.city && (
+            <p className="text-red-500 text-sm">{error.city}</p>
+          )}
         </div>
 
-        <div className="mb-5 flex items-center justify-between w-full">
+        <div className="mb-5">
+          <label
+            htmlFor="address"
+            className="block mb-2 text-sm font-bold text-gray-900"
+          >
+            Dirección
+          </label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            value={dataUser.address}
+            onChange={handleChange}
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.address ? 'border-red-500' : 'border-gray-300'}`}
+            required
+          />
+          {isSubmitted && error.address && (
+            <p className="text-red-500 text-sm">{error.address}</p>
+          )}
+        </div>
+
+        <div className="mb-5">
+          <label
+            htmlFor="password"
+            className="block mb-2 text-sm font-bold text-gray-900"
+          >
+            Contraseña
+          </label>
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            name="password"
+            value={dataUser.password}
+            onChange={handleChange}
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.password ? 'border-red-500' : 'border-gray-300'}`}
+            required
+          />
+          <button type="button" onClick={toggleShowPassword}>
+            {showPassword ? "Ocultar" : "Mostrar"}
+          </button>
+          {isSubmitted && error.password && (
+            <p className="text-red-500 text-sm">{error.password}</p>
+          )}
+        </div>
+
+        <div className="mb-5">
+          <label
+            htmlFor="passwordConfirm"
+            className="block mb-2 text-sm font-bold text-gray-900"
+          >
+            Confirmar Contraseña
+          </label>
+          <input
+            type={showPasswordConfirm ? "text" : "password"}
+            id="passwordConfirm"
+            name="passwordConfirm"
+            value={dataUser.passwordConfirm}
+            onChange={handleChange}
+            className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.passwordConfirm ? 'border-red-500' : 'border-gray-300'}`}
+            required
+          />
+          <button type="button" onClick={toggleShowPasswordConfirm}>
+            {showPasswordConfirm ? "Ocultar" : "Mostrar"}
+          </button>
+          {isSubmitted && error.passwordConfirm && (
+            <p className="text-red-500 text-sm">{error.passwordConfirm}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col items-center justify-center ">
           <button
             type="submit"
-            className="w-full h-12 bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+            className="bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out"
           >
             Registrarse
           </button>
         </div>
-
         <div className="mb-5">
           <p className="text-center text-gray-500 text-sm">
             ¿Ya tienes una cuenta?{" "}
             <a
               href="/login"
-              className="text-blue-500 hover:text-blue-700 font-bold"
+              className="text-gray-900 hover:text-gray-700 font-bold"
             >
               Inicia Sesión
             </a>
@@ -382,8 +384,8 @@ const Register = () => {
       </form>
 
       <AlertModal
-        show={showModal}
-        onClose={handleCloseModal}
+        showModal={showModal}
+        handleClose={handleCloseModal}
         title={modalContent.title}
         message={modalContent.message}
       />

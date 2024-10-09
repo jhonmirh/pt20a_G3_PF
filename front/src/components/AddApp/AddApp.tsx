@@ -1,6 +1,3 @@
-
-'use client'
-
 import React, { useState } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
 import { createAppointment } from "@/helpers/appointment.helper";
@@ -12,13 +9,21 @@ const AppointmentForm = () => {
   const { userData } = useLoggin();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const categoryId: string = searchParams.get('categoryId') || ''; 
+  const categoryId: string = searchParams.get('categoryId') || '';
 
   const initialData: IAppointmentData = {
+    id: "",
     date: "",
     description: "",
-    user  : userData?.userData?.id || "",
-    categoryId: categoryId, 
+    price: 0, // Asegúrate de inicializar price si es obligatorio
+    user: {
+      id: userData?.userData?.id || "",  // Ahora asignamos un objeto UserProps
+      name: userData?.userData?.name || '',
+      phone: userData?.userData?.phone || '',
+      address: userData?.userData?.address || '',
+      city: userData?.userData?.city || '',
+    },
+    categoryId: categoryId,
   };
 
   const [appointmentData, setAppointmentData] = useState<IAppointmentData>(initialData);
@@ -28,38 +33,40 @@ const AppointmentForm = () => {
   const handleAddAppointment = async () => {
     try {
       const userIdObject = {
-        id: userData?.userData?.id,   
-        name: userData?.userData?.name || '', 
+        id: userData?.userData?.id,
+        name: userData?.userData?.name || '',
         email: userData?.userData?.email || '',
-        password: '',  
-        age: userData?.userData?.age || 0,  
+        password: '',
+        age: userData?.userData?.age || 0,
         phone: userData?.userData?.phone || 0,
         city: userData?.userData?.city || '',
         address: userData?.userData?.address || ''
       };
-  
+
       const categoryObject = {
-        id: appointmentData.categoryId,  
-        name: ''  
+        id: appointmentData.categoryId,
+        name: '',
+        price: 0,
       };
-  
+
       const appointmentPayload = {
         date: appointmentData.date,
         description: appointmentData.description,
-        user: userData?.userData?.id || '',  
-        categoryId: appointmentData.categoryId,  
-        userId: userIdObject,  
-        category: categoryObject 
+        user: userData?.userData?.id || '',
+        categoryId: appointmentData.categoryId,
+        userId: userIdObject,
+        category: categoryObject
       };
-  
+
       const newAppointment = await createAppointment(appointmentPayload);
       console.log('Cita creada:', newAppointment);
     } catch (error) {
       console.error('Error creando la cita:', error);
+      setAlertContent({ title: "Error", message: "Error creando la cita." });
+      setShowAlert(true);
     }
   };
-  
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAppointmentData((prevData) => ({
@@ -107,8 +114,8 @@ const AppointmentForm = () => {
       </div>
 
       <AlertModal
-        show={showAlert}
-        onClose={() => setShowAlert(false)}
+        showModal={showAlert}  // Update this line
+        handleClose={() => setShowAlert(false)}  // Update this line
         title={alertContent.title}
         message={alertContent.message}
       />

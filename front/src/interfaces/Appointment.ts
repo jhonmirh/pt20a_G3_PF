@@ -1,15 +1,5 @@
-import IProduct from "./Products";
-
-export interface IAppointmentData {
-
-  date: string;
-  description: string;
-  user: string; 
-  categoryId: string;
-}
-
-///////////////////// EDIT /////////////////
-interface UserProps {
+// interfaces/User.ts
+export interface UserProps {
   id: string;
   name: string;
   phone: string;
@@ -17,14 +7,31 @@ interface UserProps {
   city: string;
 }
 
-interface CategoryProps {
+// interfaces/Category.ts
+export interface CategoryProps {
   id: string;
   name: string;
 }
+
+
+export interface IAppointmentData {
+  id: string;
+  date: string;
+  description: string;
+  price:number;
+  user: UserProps; // Ahora es un objeto de tipo UserProps
+  categoryId: string;
+}
+
+// interfaces/Appointment.ts
+
+
 export default interface AppointmentProps {
   id: string;
   description: string;
-  date: string; // or Date if you're working with Date objects
-  user: UserProps;
+  date: string;
+  price:number;
+  user: UserProps; // También aquí debería ser un objeto UserProps
   category: CategoryProps;
+  categoryId: string;
 }

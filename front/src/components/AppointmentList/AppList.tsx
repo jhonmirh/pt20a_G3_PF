@@ -1,21 +1,17 @@
-
 'use client'
-
-
-
 import { useEffect, useState } from 'react';
-import { getAppointments, updateAppointment } from '@/helpers/appointment.helper'; // update helper for updating appointment
+import { getAppointments, updateAppointment } from '@/helpers/appointment.helper';
 import { useLoggin } from '@/context/logginContext';
-// import AppointmentProps from './types';
 import EditAppointmentForm from '../EditAppointment/EditAppointmentForm';
 import AppointmentProps from '@/interfaces/Appointment';
+import CheckoutButton from '../CheckoutButton/CheckoutButton';
+
 const AppList: React.FC = () => {
   const { userData } = useLoggin();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  
-  const [editingAppointment, setEditingAppointment] = useState<AppointmentProps | null>(null); // State for editing
+  const [editingAppointment, setEditingAppointment] = useState<AppointmentProps | null>(null);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -34,11 +30,9 @@ const AppList: React.FC = () => {
     fetchAppointments();
   }, [userData]);
 
-  // Handler for opening the edit form
   const handleEditClick = (appointment: AppointmentProps) => {
     setEditingAppointment(appointment);
   };
-
 
   const handleSave = async (updatedAppointment: AppointmentProps) => {
     try {
@@ -47,7 +41,7 @@ const AppList: React.FC = () => {
         date: updatedAppointment.date,
       });
       setAppointments(prev => prev.map(app => app.id === updatedAppointment.id ? updatedAppointment : app));
-      setEditingAppointment(null); // Close the form
+      setEditingAppointment(null);
     } catch (err) {
       console.error("Error updating appointment", err);
     }
@@ -76,18 +70,21 @@ const AppList: React.FC = () => {
             <div className="text-gray-700">
               <p><strong>Categoría:</strong> {appointment.category.name}</p>
             </div>
-            {/* Edit button */}
-            <button
-              onClick={() => handleEditClick(appointment)}
-              className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition-all"
-            >
-              Editar
-            </button>
+            <div className="text-gray-700">
+              <p><strong>Categoría:</strong> {appointment.category.name}</p>
+            </div>
+            <div className="mt-4 flex space-x-3">
+              <button
+                onClick={() => handleEditClick(appointment)}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all"
+              >
+                Modificar
+              </button>
+              <CheckoutButton appointment={appointment} />
+            </div>
           </div>
         ))}
       </div>
-
-      {/* Conditional rendering for the edit form */}
       {editingAppointment && (
         <EditAppointmentForm
           appointment={editingAppointment}
