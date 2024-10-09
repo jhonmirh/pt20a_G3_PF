@@ -15,6 +15,11 @@ const DataUser = () => {
   });
 
   useEffect(() => {
+    console.log("User Data:", userData?.userData);
+  }, [userData?.userData]);
+
+
+  useEffect(() => {
     if (!userData) {
       setModalContent({
         title: "Access Denied",
@@ -61,9 +66,9 @@ const DataUser = () => {
         <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
           {userData?.userData.phone}
         </span>
-        <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+        {/* <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
           {userData?.userData.ordes}
-        </span>
+        </span> */}
       </div>
     </>
   );

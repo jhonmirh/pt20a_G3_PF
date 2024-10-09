@@ -50,3 +50,27 @@ export async function loginUser(userData: ILogin) {
         throw new Error(error.message || 'Error en el proceso de login');
     }
 }
+// Esta función envía el token de Google a tu backend para validar y obtener un JWT
+export const loginWithGoogle = async (googleToken: string) => {
+    try{
+        const response = await fetch('http://localhost:3010/auth/google-login', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+                body: JSON.stringify({
+                token: googleToken,
+        }),
+    });
+
+if (!response.ok) {
+    const errorData = await response.json(); 
+    throw new Error(`Error: ${errorData.message || response.statusText}`);
+}
+const data = await response.json();
+return data; // Debe devolver el usuario y el JWT
+}catch(error) {
+console.error('Error al iniciar sesión con Google:', error);
+
+}
+};

@@ -7,8 +7,17 @@ import Footer from "@/components/Footer/Footer";
 import ShowComponent from "@/components/ShowComponent/ShowComponent";
 import "./globals.css";
 import AsideList from "@/components/AsideList/AsideList";
+import { GoogleOAuthProvider} from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const clientId = process.env.GOOGLE_CLIENT_ID || ""
+
+console.log("ClientId:",process.env.GOOGLE_CLIENT_ID);
+
+if (!clientId) {
+  console.error("Google Client ID no está definido. Verifica tus variables de entorno.");
+}
 
 export const metadata: Metadata = {
   title: "Soluciones JhonDay",
@@ -47,6 +56,8 @@ export default async function RootLayout({
           backgroundRepeat: "no-repeat",
         }}
       >
+        {/* GoogleOAuthProvider para la autenticación con Google */}
+        <GoogleOAuthProvider clientId={clientId}>
         <LogginProvider>
           {/* Mostrar NavBar y AsideList solo en rutas donde no esté login/register */}
             <NavBar images={images} />
@@ -63,6 +74,7 @@ export default async function RootLayout({
           {/* El footer se muestra en todas las páginas */}
           <Footer />
         </LogginProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );
