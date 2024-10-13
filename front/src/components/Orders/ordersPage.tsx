@@ -98,8 +98,8 @@ const OrdersPage = () => {
             </div>
           ))
         ) : (
-          <div className="m-10 p-2 max-w-80 bg-white border border-gray-200 rounded-lg shadow-lg shadow-green-800 dark:bg-green-800 dark:border-gray-700">
-            <h1>YOU HAVE NO ITEMS IN YOUR ORDERS</h1>
+          <div className="m-10 p-2 max-w-80 bg-white border border-gray-200 rounded-lg shadow-lg shadow-gray-800 dark:bg-gray-800 dark:border-gray-700">
+            <h1>No Tienes Citas Atendidas</h1>
           </div>
         )}
       </div>

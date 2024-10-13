@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
 import { createAppointment } from "@/helpers/appointment.helper";
@@ -15,9 +16,10 @@ const AppointmentForm = () => {
     id: "",
     date: "",
     description: "",
-    price: 0, // Asegúrate de inicializar price si es obligatorio
+    status:"",
+    price: 0, 
     user: {
-      id: userData?.userData?.id || "",  // Ahora asignamos un objeto UserProps
+      id: userData?.userData?.id || "",  
       name: userData?.userData?.name || '',
       phone: userData?.userData?.phone || '',
       address: userData?.userData?.address || '',
@@ -51,6 +53,7 @@ const AppointmentForm = () => {
 
       const appointmentPayload = {
         date: appointmentData.date,
+        status: appointmentData.status,
         description: appointmentData.description,
         user: userData?.userData?.id || '',
         categoryId: appointmentData.categoryId,
@@ -114,8 +117,8 @@ const AppointmentForm = () => {
       </div>
 
       <AlertModal
-        showModal={showAlert}  // Update this line
-        handleClose={() => setShowAlert(false)}  // Update this line
+        showModal={showAlert}  
+        handleClose={() => setShowAlert(false)}  
         title={alertContent.title}
         message={alertContent.message}
       />

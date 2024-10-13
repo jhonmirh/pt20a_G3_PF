@@ -71,12 +71,12 @@ const AppList: React.FC = () => {
               <p><strong>Categoría:</strong> {appointment.category.name}</p>
             </div>
             <div className="text-gray-700">
-              <p><strong>Categoría:</strong> {appointment.category.name}</p>
+              <p><strong>Estado de tu Cita:</strong> {appointment.status}</p>
             </div>
             <div className="mt-4 flex space-x-3">
               <button
                 onClick={() => handleEditClick(appointment)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all"
+                className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition-all"
               >
                 Modificar
               </button>

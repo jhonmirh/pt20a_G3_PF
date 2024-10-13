@@ -6,7 +6,7 @@ const ShowComponent = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
 
 
-  const hiddenPaths = ["/login", "/register", "/appointment", "/appointments"];
+  const hiddenPaths = ["/login", "/register", "/appointment", "/appointments", "/dashboardAdmin/appointments", "/dashboardAdmin/users", "/dashboardAdmin/categories", "/dashboard/orders", "/dashboard/profiles"];
 
   if (hiddenPaths.includes(pathName)) {
     return null; 

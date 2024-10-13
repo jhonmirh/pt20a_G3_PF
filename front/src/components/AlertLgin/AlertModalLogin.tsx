@@ -25,7 +25,7 @@ const AlertModalLogin: React.FC<AlertModalProps> = ({
               onClick={onClose}
               className="w-full py-2 px-4 bg-lime-500 hover:bg-green-950 text-white rounded-md transition-colors duration-300"
             >
-              Close
+              Cerrar
             </button>
           </div>
         </div>

@@ -19,6 +19,7 @@ export interface IAppointmentData {
   date: string;
   description: string;
   price:number;
+  status:string;
   user: UserProps; // Ahora es un objeto de tipo UserProps
   categoryId: string;
 }
@@ -31,6 +32,7 @@ export default interface AppointmentProps {
   description: string;
   date: string;
   price:number;
+  status:string;
   user: UserProps; // También aquí debería ser un objeto UserProps
   category: CategoryProps;
   categoryId: string;

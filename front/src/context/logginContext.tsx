@@ -43,13 +43,15 @@ export const LogginProvider: React.FC<LogginProviderProps> = ({ children }) => {
     const storedUserData = localStorage.getItem("sessionStart");
     if (storedUserData) {
       try {
-        setUserData(JSON.parse(storedUserData));
+        const parsedData = JSON.parse(storedUserData);
+        setUserData(parsedData); // Asegúrate de que parsedData contenga todos los campos necesarios
       } catch (error) {
         console.error("Error parsing session data:", error);
         setUserData(null);
       }
     }
   }, []);
+  
 
   return (
     <LogginContext.Provider
