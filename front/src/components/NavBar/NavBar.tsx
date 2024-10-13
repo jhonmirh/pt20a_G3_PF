@@ -1,5 +1,4 @@
-"use client";
-
+'use client'
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { NavBarProps } from "./types";
@@ -10,8 +9,6 @@ import { useRouter } from "next/navigation";
 import SignOutConfirmation from "../SignOutConfirmation/SignOutConfirmation";
 import Carousel from "../Carousel/Carousel";
 import { useLoggin } from "@/context/logginContext";
-
-
 
 export default function NavBar({ images }: NavBarProps) {
   const { userData, setUserData } = useLoggin();
@@ -32,7 +29,6 @@ export default function NavBar({ images }: NavBarProps) {
     router.push("/");
   };
 
- 
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
       router.push(`/search?query=${searchTerm}`);
@@ -82,16 +78,67 @@ export default function NavBar({ images }: NavBarProps) {
             Categoria
           </Link>
 
-          <Link href="https://buy.stripe.com/test_6oE5o14tS4R29LG9AA" className="text-white hover:text-blue-500 transition-colors duration-300">
-            Admin
-          </Link>
+          <Menu as="div" className="relative inline-block text-left">
+            <div>
+              <Menu.Button className="flex items-center text-white hover:text-blue-500 transition-colors duration-300">
+                Admin
+                <ChevronDownIcon className="w-5 h-5 ml-1" aria-hidden="true" />
+              </Menu.Button>
+            </div>
+            <Transition
+              as={React.Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-gray-800 border border-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                <div className="px-1 py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/dashboardAdmin/appointments"
+                        className={`${
+                          active ? "bg-blue-500 text-white" : "text-white"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                      >
+                        Turnos
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/dashboardAdmin/categories"
+                        className={`${
+                          active ? "bg-blue-500 text-white" : "text-white"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                      >
+                        Servicios
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/dashboardAdmin/users"
+                        className={`${
+                          active ? "bg-blue-500 text-white" : "text-white"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                      >
+                        Usuarios Registrados
+                      </Link>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
 
           {userData ? (
             <>
-              <Link href="/service" className="text-white hover:text-blue-500 transition-colors duration-300">
-                Servicio
-              </Link>
-
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button className="flex items-center text-white hover:text-blue-500 transition-colors duration-300">
@@ -115,9 +162,7 @@ export default function NavBar({ images }: NavBarProps) {
                           <Link
                             href="/dashboard/profiles"
                             className={`${
-                              active
-                                ? "bg-blue-500 text-white"
-                                : "text-white"
+                              active ? "bg-blue-500 text-white" : "text-white"
                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                           >
                             Perfil
@@ -129,9 +174,7 @@ export default function NavBar({ images }: NavBarProps) {
                           <Link
                             href="/dashboard/orders"
                             className={`${
-                              active
-                                ? "bg-blue-500 text-white"
-                                : "text-white"
+                              active ? "bg-blue-500 text-white" : "text-white"
                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                           >
                             Turnos
@@ -143,21 +186,12 @@ export default function NavBar({ images }: NavBarProps) {
                 </Transition>
               </Menu>
 
-              <button
-                className="text-red-600 hover:text-red-800"
-                onClick={handleSignOut}
-              >
+              <button className="text-red-600 hover:text-red-800" onClick={handleSignOut}>
                 Sign Out
               </button>
 
-              <Link
-                href="/appointments"
-                className="flex items-center p-2"
-                title="Your Appointment"
-              >
-                <span className="ml-1 text-white hover:text-blue-500">
-                  Citas
-                </span>
+              <Link href="/appointments" className="flex items-center p-2" title="Your Appointment">
+                <span className="ml-1 text-white hover:text-blue-500">Citas</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 text-white hover:text-blue-500"
@@ -176,16 +210,10 @@ export default function NavBar({ images }: NavBarProps) {
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="text-white hover:text-blue-500 transition-colors duration-300"
-              >
+              <Link href="/login" className="text-white hover:text-blue-500 transition-colors duration-300">
                 Sign In
               </Link>
-              <Link
-                href="/register"
-                className="text-white hover:text-blue-500 transition-colors duration-300"
-              >
+              <Link href="/register" className="text-white hover:text-blue-500 transition-colors duration-300">
                 Registro
               </Link>
             </>

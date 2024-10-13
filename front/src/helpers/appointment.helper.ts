@@ -28,6 +28,11 @@ export async function createAppointment(data: { date: string; description: strin
 }
 
 
+///////////////////////////// webhooks
+
+
+
+
   
   
 
@@ -98,3 +103,5 @@ export async function getAppointments(userId:string) {
     return await response.json();
   }
   
+
+

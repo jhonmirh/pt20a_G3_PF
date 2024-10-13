@@ -14,13 +14,28 @@ export interface IRegister {
     name: string;
     email: string;
     password: string;
-    passwordConfirm?:string;
+    passwordConfirm?: string;
     age: number;
     phone: number;
     address: string;
     city: string;
     admin?: boolean;
 }
+
+// En la interfaz IUsersUpdate
+export interface IUsersUpdate {
+    id: string;
+    name: string;
+    email: string;
+    phone: number;  // Cambia a `number`
+    age: number;
+    address: string;
+    city: string;
+    password: string;
+    passwordConfirm?: string;
+    admin?: boolean;
+  }
+  
 
 export type TRegisterError = {
     email?: string;
@@ -29,8 +44,8 @@ export type TRegisterError = {
     name?: string;
     address?: string;
     phone?: string;
-    age?: string;  
-    city?:string;
+    age?: string;
+    city?: string;
 }
 
 
@@ -62,6 +77,7 @@ export interface userSession {
         phone: string;
         address: string;
         city: string;
-        orders: IOrder [];
+        admin: boolean;
+        orders: IOrder[];
     }
 }
