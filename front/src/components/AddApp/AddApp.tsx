@@ -1,9 +1,8 @@
-'use client'
+'use client';
 import React, { useState } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
 import { createAppointment } from "@/helpers/appointment.helper";
 import { useLoggin } from "@/context/logginContext";
-import AlertModal from "../Alert/AlertModal";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const AppointmentForm = () => {
@@ -16,10 +15,10 @@ const AppointmentForm = () => {
     id: "",
     date: "",
     description: "",
-    status:"",
-    price: 0, 
+    status: "",
+    price: 0,
     user: {
-      id: userData?.userData?.id || "",  
+      id: userData?.userData?.id || "",
       name: userData?.userData?.name || '',
       phone: userData?.userData?.phone || '',
       address: userData?.userData?.address || '',
@@ -29,10 +28,27 @@ const AppointmentForm = () => {
   };
 
   const [appointmentData, setAppointmentData] = useState<IAppointmentData>(initialData);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertContent, setAlertContent] = useState({ title: "", message: "" });
+
+  const isValidAppointmentDate = (dateString: string): boolean => {
+    const date = new Date(dateString);
+    const day = date.getUTCDay(); // 0 = Sunday, 6 = Saturday
+    const hours = date.getUTCHours();
+    
+    // Validar que el día esté entre lunes (1) y viernes (5)
+    if (day < 1 || day > 5) return false;
+
+    // Validar que la hora esté entre 9 AM (9) y 6 PM (18)
+    if (hours < 9 || hours > 17) return false;
+
+    return true;
+  };
 
   const handleAddAppointment = async () => {
+    if (!isValidAppointmentDate(appointmentData.date)) {
+      alert("Por favor, elige un horario entre 9 AM y 6 PM, de lunes a viernes");
+      return;
+    }
+
     try {
       const userIdObject = {
         id: userData?.userData?.id,
@@ -65,8 +81,7 @@ const AppointmentForm = () => {
       console.log('Cita creada:', newAppointment);
     } catch (error) {
       console.error('Error creando la cita:', error);
-      setAlertContent({ title: "Error", message: "Error creando la cita." });
-      setShowAlert(true);
+      alert("Error creando la cita.");
     }
   };
 
@@ -82,6 +97,10 @@ const AppointmentForm = () => {
     <div className="p-4 bg-white bg-opacity-80 rounded-lg shadow-md max-w-lg mx-auto mt-10">
       <h2 className="text-xl font-bold mb-4">Agendar Cita</h2>
 
+      <p className="mb-4 text-red-600">
+        Horarios de atención: Lunes a Viernes, 9 AM a 6 PM.
+      </p>
+
       <label className="block mb-2 text-sm font-medium text-gray-700">
         Fecha y Hora
       </label>
@@ -92,6 +111,7 @@ const AppointmentForm = () => {
         onChange={handleChange}
         className="mb-4 p-2 w-full border rounded"
         required
+        min={new Date().toISOString().slice(0, 16)} // Limitar a la fecha actual
       />
 
       <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -115,13 +135,6 @@ const AppointmentForm = () => {
           Agregar Cita
         </button>
       </div>
-
-      <AlertModal
-        showModal={showAlert}  
-        handleClose={() => setShowAlert(false)}  
-        title={alertContent.title}
-        message={alertContent.message}
-      />
     </div>
   );
 };
