@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import FooterMap from "../FooterMap/FooterMap";
 
 const Footer = () => {
   return (
@@ -19,6 +20,9 @@ const Footer = () => {
             <span className="mt-2 text-2xl font-bold whitespace-nowrap">
               JhonDay
             </span>
+          </div>
+          <div className="mb-6 md:mb-0 md:w-[350px]">
+            <FooterMap /> {/* Componente de mapa integrado aquí */}
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
