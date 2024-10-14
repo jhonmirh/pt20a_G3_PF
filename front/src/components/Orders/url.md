@@ -5,15 +5,18 @@ const [showModal, setShowModal] = useState(false);
     title: "",
     message: "",
   });
-useEffect(() => {
-    if (!userData) {
+
+
+ useEffect(() => {
+    if (!userData?.token) {
       setModalContent({
         title: "Acceso Denegado",
         message: "Debe estar Logueado para Acceder a Este Espacio",
       });
-      setShowModal(true); 
+      setShowModal(true);
+      console.log("Mostrando Modal: ", showModal); // Agregar para verificar el valor
     }
-  }, [userData]);
+  }, [userData, showModal]);
 
 
   const handleCloseModal = () => {
@@ -21,13 +24,12 @@ useEffect(() => {
     router.push("/login"); 
   };
 
-  if (!userData) {
-    return (
-      <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModal}
-        title={modalContent.title}
-        message={modalContent.message}
-      />
-    );
-  }
+  {alertModalOpen && (
+        <AlertModal
+          showModal={alertModalOpen}
+          handleClose={() => setAlertModalOpen(false)}
+          title="No hay citas"
+          message="El usuario no posee citas registradas."
+        />
+      )}
+  

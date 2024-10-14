@@ -5,6 +5,8 @@ import { useLoggin } from "@/context/logginContext";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 import { UserProps } from "@/interfaces/Appointment";
 import { IAppointmentData } from "@/interfaces/Appointment";
+import { useRouter } from "next/navigation";
+import AlertModal from "../Alert/AlertModal";
 
 interface IAppointment {
   id: string;
@@ -19,19 +21,25 @@ interface IAppointment {
 const AppointmentList = () => {
   const { userData } = useLoggin();
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
-  const [filteredAppointments, setFilteredAppointments] = useState<IAppointment[]>([]);
-  const [editingAppointment, setEditingAppointment] = useState<IAppointment | null>(null);
+  const [filteredAppointments, setFilteredAppointments] = useState<
+    IAppointment[]
+  >([]);
+  const [editingAppointment, setEditingAppointment] =
+    useState<IAppointment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchDate, setSearchDate] = useState("");
-  const [searchStatus, setSearchStatus] = useState(""); // Nuevo estado para el filtro de estado
+  const [searchStatus, setSearchStatus] = useState("");
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments`, {
-          headers: { Authorization: `Bearer ${userData?.token || ""}` },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/appointments`,
+          {
+            headers: { Authorization: `Bearer ${userData?.token || ""}` },
+          }
+        );
 
         if (!response.ok) throw new Error("Error al obtener las citas");
 
@@ -46,11 +54,39 @@ const AppointmentList = () => {
     fetchAppointments();
   }, [userData]);
 
+  /////////////////////////
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    message: "",
+  });
+  const router = useRouter();
   useEffect(() => {
-    const filtered = appointments.filter((appointment) => 
-      appointment.description.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!searchDate || appointment.date.startsWith(searchDate)) &&
-      (!searchStatus || appointment.status === searchStatus) // Filtro por estado
+    if (!userData?.token && !userData?.userData?.address) {
+      setModalContent({
+        title: "Acceso Denegado",
+        message: "Debe estar Logueado para Acceder a Este Espacio",
+      });
+      setShowModal(true);
+      console.log("Mostrando Modal: ", showModal);
+    }
+  }, [userData, showModal]);
+
+  const handleCloseModalUser = () => {
+    setShowModal(false);
+    router.push("/login");
+  };
+
+  ////////////////////////
+
+  useEffect(() => {
+    const filtered = appointments.filter(
+      (appointment) =>
+        appointment.description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) &&
+        (!searchDate || appointment.date.startsWith(searchDate)) &&
+        (!searchStatus || appointment.status === searchStatus) // Filtro por estado
     );
     setFilteredAppointments(filtered);
   }, [searchTerm, searchDate, searchStatus, appointments]);
@@ -73,41 +109,52 @@ const AppointmentList = () => {
     }
   };
 
-  const handleStatusChange = async (id: string, status: IAppointmentData["status"]) => {
+  const handleStatusChange = async (
+    id: string,
+    status: IAppointmentData["status"]
+  ) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/${id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${userData?.token || ""}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
-  
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/appointments/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${userData?.token || ""}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`Error al actualizar estado: ${response.statusText}`);
       }
-  
+
       const updatedAppointment = await response.json();
       setAppointments((prev) =>
-        prev.map((app) => (app.id === updatedAppointment.id ? updatedAppointment : app))
+        prev.map((app) =>
+          app.id === updatedAppointment.id ? updatedAppointment : app
+        )
       );
     } catch (error) {
       console.error("Error al actualizar el estado:", error);
       alert("No se pudo guardar el estado. Por favor, inténtalo de nuevo.");
     }
   };
-  
+
   const handleModalSave = async (updatedAppointment: IAppointment) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/${updatedAppointment.id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${userData?.token || ""}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedAppointment),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/appointments/${updatedAppointment.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${userData?.token || ""}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedAppointment),
+        }
+      );
 
       const data = await response.json();
       setAppointments((prev) =>
@@ -127,18 +174,24 @@ const AppointmentList = () => {
           type="text"
           placeholder="Buscar por descripción"
           value={searchTerm}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSearchTerm(e.target.value)
+          }
           className="w-full p-2 border border-gray-900 rounded mb-2"
         />
         <input
           type="date"
           value={searchDate}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchDate(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSearchDate(e.target.value)
+          }
           className="w-full p-2 border border-gray-900 rounded mb-2"
         />
         <select
           value={searchStatus}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => setSearchStatus(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+            setSearchStatus(e.target.value)
+          }
           className="w-full p-2 border border-gray-900 rounded"
         >
           <option value="">Filtrar por Status</option>
@@ -213,6 +266,13 @@ const AppointmentList = () => {
           onClose={() => setIsModalOpen(false)}
         />
       )}
+
+      <AlertModal
+        showModal={showModal}
+        handleClose={handleCloseModalUser}
+        title={modalContent.title}
+        message={modalContent.message}
+      />
     </div>
   );
 };
