@@ -18,7 +18,7 @@ export function validateLogin(values: ILogin): ILoginError {
     if (!values.email) {
         errors.email = "Email es Requerido.";
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-        errors.email = "Invalid email address.";
+        errors.email = "Dirección de correo electrónico no válida.";
     }
     return errors;
 }
@@ -29,7 +29,7 @@ export function validateRegisterLogin(values: IRegister): TRegisterError {
     if (!values.email) {
         errors.email = "Email es Requerido.";
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-        errors.email = "Invalid email address.";
+        errors.email = "Dirección de correo electrónico no válida.";
     }
 
     if (!values.password) {
@@ -214,7 +214,7 @@ const Register = () => {
             htmlFor="name"
             className="block mb-2 text-sm font-bold text-gray-900"
           >
-            Nombre
+            Nombre y apellido
           </label>
           <input
             type="text"

@@ -20,30 +20,91 @@ const Login = () => {
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
 
   // Función para manejar el login con Google
+  // const handleGoogleLoginSuccess = async (response: any) => {
+  //   try {
+  //     const token = response.credential;
+  //     console.log("Google Token:", token);
+  //     const googleLoginResponse = await loginWithGoogle({ credential: token });
+  //     const { user, token: authToken } = googleLoginResponse;
+  //     if (!user.name || !user.email || !user.phone) {
+  //       console.error("Faltan datos del usuario en la respuesta:", user);
+  //       return;
+  //     }
+  //     //console.log("googleLoginRespone", googleLoginResponse)
+  //     // Actualizar el contexto con la información del usuario
+  //     setUserData({ token: authToken, userData: user });
+  //     localStorage.setItem("sessionStart", JSON.stringify({ token: authToken, userData: user }));
+  //     console.log("User Data set:", { token: authToken, userData: user });
+      
+  //    // Redireccionar a CompleteProfile si el perfil no está completo
+  //     if (!userData?.userData.age ||  !userData?.userData.phone || !userData?.userData.address || !userData?.userData.city) {
+  //     router.push("/completar-perfil");
+  //   } else {
+  //     // Mostrar el modal de bienvenida si el perfil está completo
+  //     setModalContent({
+  //       title: "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
+  //       message: "Login con Google exitoso",
+  //     });
+  //     setShowModal(true);
+  //   }
+  //   } catch (error: any) {
+  //     console.error("Error during Google Login:", error);
+  //     setModalContent({
+  //       title: "Error",
+  //       message: error.message || "Un error inesperado ocurrió durante el login con Google.",
+  //     });
+  //     setShowModal(true);
+  //   }
+  // };
+
   const handleGoogleLoginSuccess = async (response: any) => {
     try {
       const token = response.credential;
       console.log("Google Token:", token);
+  
       const googleLoginResponse = await loginWithGoogle({ credential: token });
       const { user, token: authToken } = googleLoginResponse;
+  
+
+      // Almacena el token JWT del backend en el almacenamiento local
+      localStorage.setItem("token", authToken);
+
+
+      // Decodificación opcional para verificar el contenido del token
+      const decodedToken = JSON.parse(atob(authToken.split('.')[1]));
+      console.log("Decoded Token Front:", decodedToken);
+
+
       if (!user.name || !user.email || !user.phone) {
         console.error("Faltan datos del usuario en la respuesta:", user);
+        
+        // Guarda lo que tengas del usuario para redirigir a completar el perfil
+        setUserData({ token: authToken, userData: user });
+        localStorage.setItem("sessionStart", JSON.stringify({ token: authToken, userData: user }));
+        
+        // Redirigir al formulario de completar perfil
+        router.push("/completar-perfil");
         return;
       }
-      //console.log("googleLoginRespone", googleLoginResponse)
-      // Actualizar el contexto con la información del usuario
+  
+      // Actualizar el contexto con la información completa del usuario
       setUserData({ token: authToken, userData: user });
       localStorage.setItem("sessionStart", JSON.stringify({ token: authToken, userData: user }));
       console.log("User Data set:", { token: authToken, userData: user });
-      
-    
-      setModalContent({
-        title: "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
-        message: "Login con Google exitoso",
-      });
-      setShowModal(true);
+  
+      // Verificar datos del perfil y redireccionar si está incompleto
+      if (!user.age || !user.phone || !user.address || !user.city) {
+        router.push("/completar-perfil");
+      } else {
+        // Mostrar el modal de bienvenida si el perfil está completo
+        setModalContent({
+          title: "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
+          message: "Login con Google exitoso",
+        });
+        setShowModal(true);
+      }
     } catch (error: any) {
-      console.error("Error during Google Login:", error);
+      console.error("Error durante el Login con Google:", error);
       setModalContent({
         title: "Error",
         message: error.message || "Un error inesperado ocurrió durante el login con Google.",
@@ -51,6 +112,11 @@ const Login = () => {
       setShowModal(true);
     }
   };
+
+
+
+
+
   const handleGoogleLoginFailure = () => {
     setModalContent({
       title: "Error",

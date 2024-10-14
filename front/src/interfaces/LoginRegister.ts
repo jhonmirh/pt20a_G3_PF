@@ -33,6 +33,13 @@ export type TRegisterError = {
     city?:string;
 }
 
+export type TCompleteProfileError = {
+    address?: string;
+    phone?: string;
+    age?: string;  
+    city?:string;
+}
+
 
 export interface IOrder {
     id: string;
@@ -51,17 +58,24 @@ export interface IOrder {
     };
 }
 
+export interface ICompleteProfile {
+    age: number;
+    phone: number;
+    city: string;
+    address: string;
+}
+
 export interface userSession {
     token: string;
     userData: {
         id: string;
         name: string;
         email: string;
-        age: number;
-        password: string;
-        phone: string;
-        address: string;
-        city: string;
+        age: number | null;
+        password: string ;
+        phone: string | null;
+        address: string | null;
+        city: string | null;
         orders: IOrder [];
     }
 }

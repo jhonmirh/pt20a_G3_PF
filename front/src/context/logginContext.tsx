@@ -10,6 +10,7 @@ export interface LogginContextProps {
   loginWithGoogle: (googleUserData: { credential: string }) => Promise<{ user: any, token: string }>
   selectedProduct: IProduct | null;
   setSelectedProduct: (product: IProduct | null) => void;
+  
 }
 
 // Creación del contexto con valores iniciales vacíos
@@ -21,6 +22,7 @@ export const LogginContext = createContext<LogginContextProps>({
   },
   selectedProduct: null,
   setSelectedProduct: () => {},
+  
 });
 
 export interface LogginProviderProps {
@@ -47,21 +49,34 @@ const loginWithGoogle = async (googleUserData: { credential: string }) : Promise
     }
     const userData = await response.json();
     console.log("Response data:", userData);
+
     const newUser = {
       token: userData.token,
-      user: {
-        name: userData.userData.name || "Sin datos", // O asigna un valor predeterminado si falta
-        email: userData.userData.email || "Sin datos",
-        phone: userData.userData.phone || "Sin datos",
-      },
+      user:  {
+        id: userData.userData.id || '',
+        name: userData.userData.name , // O asigna un valor predeterminado si falta
+        email: userData.userData.email ,
+        age: userData.userData.age ,
+        password: userData.userData.password,
+        phone: userData.userData.phone,
+        address: userData.userData.address,
+        city: userData.userData.city,
+        orders: userData.userData.orders,
+      }as Partial<userSession["userData"]>,
     };
     console.log("Formatted User Data:", newUser);
+
+    setUserData({
+      token: newUser.token,
+      userData: newUser.user, // O `userData` dependiendo de la estructura que prefieras
+    } as userSession);
     return newUser;
   } catch (error) {
     console.error("Error al iniciar sesión con Google:", error);
     throw error; // Lanza el error para que se maneje en handleGoogleLoginSuccess
   }
 };
+
 
   // Efecto para almacenar datos de usuario en localStorage cuando cambian
   useEffect(() => {
@@ -76,13 +91,16 @@ const loginWithGoogle = async (googleUserData: { credential: string }) : Promise
   // Efecto para cargar datos del localStorage cuando el componente se monta
   useEffect(() => {
     const storedUserData = localStorage.getItem("sessionStart");
+    console.log("Stored User Data:", storedUserData);
     if (storedUserData) {
       try {
-        setUserData(JSON.parse(storedUserData));
-      } catch (error) {
-        console.error("Error parsing session data:", error);
-        setUserData(null);
-      }
+        const parsedData = JSON.parse(storedUserData);
+      console.log("Parsed User Data:", parsedData); // Verifica la estructura antes de asignar a setUserData
+      setUserData(parsedData);
+    } catch (error) {
+      console.error("Error parsing session data:", error);
+      setUserData(null);
+    }
     }
   }, []);
 
@@ -94,6 +112,7 @@ const loginWithGoogle = async (googleUserData: { credential: string }) : Promise
         loginWithGoogle,
         selectedProduct,
         setSelectedProduct,
+        
       }}
     >
       {children}

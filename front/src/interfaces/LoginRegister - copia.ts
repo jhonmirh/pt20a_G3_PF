@@ -16,6 +16,7 @@ export interface IRegister {
     address: string;
 }
 
+
 export type TRegisterError = Partial<IRegister>;
 
 export interface userSession {

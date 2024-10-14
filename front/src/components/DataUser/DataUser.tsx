@@ -15,15 +15,15 @@ const DataUser = () => {
   });
 
   useEffect(() => {
-    console.log("User Data:", userData?.userData);
-  }, [userData?.userData]);
+    console.log("User Data:", userData);
+  }, [userData]);
 
 
   useEffect(() => {
     if (!userData) {
       setModalContent({
-        title: "Access Denied",
-        message: "You must be logged in to view your Profiles",
+        title: "Acceso denegado",
+        message: "Debes iniciar sesión para ver tus perfiles",
       });
       setShowModal(true); 
     }
@@ -37,8 +37,8 @@ const DataUser = () => {
   if (!userData) {
     return (
       <AlertModal
-        show={showModal}
-        onClose={handleCloseModal}
+        showModal={showModal}
+        handleClose={handleCloseModal}
         title={modalContent.title}
         message={modalContent.message}
       />
@@ -51,21 +51,30 @@ const DataUser = () => {
       <div className="flex flex-col justify-between m-10 p-4 max-w-xs w-full bg-white border border-gray-200 rounded-lg shadow-lg shadow-green-800 dark:bg-green-800 dark:border-gray-700">
         <div className="mb-4 text-center">
           <h2 className="text-2xl font-semibold text-gray-700 dark:text-white">
-            Your Profile User Data JhonDay
+            Tus datos personales
           </h2>
         </div>
       </div>
 
       <div className="flex flex-col justify-between m-10 p-4 max-w-xs w-full bg-white border border-gray-200 rounded-lg shadow-lg shadow-green-800 dark:bg-green-800 dark:border-gray-700">
-        <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.name}
-        </span>
-        <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.email}
-        </span>
-        <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
-          {userData?.userData.phone}
-        </span>
+        <label htmlFor="name" className="block mb-2 text-sm font-bold text-gray-900">Nombre y apellido: <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData?.name}
+        </span></label>
+        <label  htmlFor="email" className="block mb-2 text-sm font-bold text-gray-900">Correo Electrónico:<span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData?.email}
+        </span></label>
+        <label htmlFor="age"className="block mb-2 text-sm font-bold text-gray-900">Edad: <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData?.age}
+        </span></label>
+        <label htmlFor="phone" className="block mb-2 text-sm font-bold text-gray-900">Teléfono: <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData?.phone}
+        </span></label>
+        <label htmlFor="city" className="block mb-2 text-sm font-bold text-gray-900">Ciudad: <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData?.city}
+        </span></label>
+        <label htmlFor="address" className="block mb-2 text-sm font-bold text-gray-900">Dirección: <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
+          {userData?.userData?.address}
+        </span></label>
         {/* <span className="block mb-2 text-sm font-bold text-green-900 dark:text-white">
           {userData?.userData.ordes}
         </span> */}
