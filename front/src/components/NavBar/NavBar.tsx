@@ -2,13 +2,13 @@
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { NavBarProps } from "./types";
+import { useRouter } from "next/navigation";
+import { useLoggin } from "@/context/logginContext";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import SignOutConfirmation from "../SignOutConfirmation/SignOutConfirmation";
 import Carousel from "../Carousel/Carousel";
-import { useLoggin } from "@/context/logginContext";
 
 export default function NavBar({ images }: NavBarProps) {
   const { userData, setUserData } = useLoggin();
@@ -39,7 +39,7 @@ export default function NavBar({ images }: NavBarProps) {
     <header className="relative bg-gray-900 shadow-md w-full">
       <div className="flex justify-between items-center p-4">
         <Link href="/">
-          <Image src="/logo-JhonDay.png" alt="Logo" width={50} height={50} />
+          <Image src="/logo-JhonDay3.png" alt="Logo" width={50} height={50} />
         </Link>
 
         <div className="relative flex items-center w-full max-w-md">

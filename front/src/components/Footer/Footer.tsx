@@ -17,8 +17,8 @@ const Footer = () => {
                 alt="JhonDay Logo"
               />
             </a>
-            <span className="mt-2 text-2xl font-bold whitespace-nowrap">
-              JhonDay
+            <span className="mt-8 text-2xl font-bold whitespace-nowrap">
+              Creatividad Educativa
             </span>
           </div>
           <div className="mb-6 md:mb-0 md:w-[350px]">
@@ -66,12 +66,12 @@ const Footer = () => {
               <ul>
                 <li className="mb-2">
                   <a href="#" className="hover:underline">
-                    Privacy Policy
+                    Tecnología Abierta
                   </a>
                 </li>
                 <li>
                   <a href="#" className="hover:underline">
-                    Terms &amp; Conditions
+                    Terminos &amp; Condiciones
                   </a>
                 </li>
               </ul>
@@ -85,7 +85,7 @@ const Footer = () => {
             <a href="/" className="hover:underline">
               JhonDay Soluciones Integrales™
             </a>
-            . All Rights Reserved.
+            . Creative Comons 2.0.
           </span>
           <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
             <a href="#" className="hover:text-blue-500">
