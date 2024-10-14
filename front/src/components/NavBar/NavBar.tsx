@@ -74,6 +74,9 @@ export default function NavBar({ images }: NavBarProps) {
         </div>
 
         <nav className="flex items-center space-x-6">
+    
+    
+    {userData?.userData.admin &&
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="flex items-center text-white hover:text-blue-500 transition-colors duration-300">
@@ -132,6 +135,9 @@ export default function NavBar({ images }: NavBarProps) {
               </Menu.Items>
             </Transition>
           </Menu>
+}
+
+
 
           {userData ? (
             <>

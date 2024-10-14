@@ -24,7 +24,7 @@ const SignOutConfirmation: React.FC<SigOutModalProps> = ({
           </button>
           <button
             onClick={onConfirm}
-            className="bg-green-950 text-white px-4 py-2 rounded shadow-lg hover:bg-green-700"
+            className="bg-gray-900 text-white px-4 py-2 rounded shadow-lg hover:bg-gray-700"
           >
             Confirm
           </button>
