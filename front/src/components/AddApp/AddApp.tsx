@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
 import { createAppointment } from "@/helpers/appointment.helper";
@@ -10,25 +10,26 @@ const AppointmentForm = () => {
   const { userData } = useLoggin();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const categoryId: string = searchParams.get('categoryId') || '';
+  const categoryId: string = searchParams.get("categoryId") || "";
 
   const initialData: IAppointmentData = {
     id: "",
     date: "",
     description: "",
-    status:"",
-    price: 0, 
+    status: "Pendiente",
+    price: 0,
     user: {
-      id: userData?.userData?.id || "",  
-      name: userData?.userData?.name || '',
-      phone: userData?.userData?.phone || '',
-      address: userData?.userData?.address || '',
-      city: userData?.userData?.city || '',
+      id: userData?.userData?.id || "",
+      name: userData?.userData?.name || "",
+      phone: userData?.userData?.phone || "",
+      address: userData?.userData?.address || "",
+      city: userData?.userData?.city || "",
     },
     categoryId: categoryId,
   };
 
-  const [appointmentData, setAppointmentData] = useState<IAppointmentData>(initialData);
+  const [appointmentData, setAppointmentData] =
+    useState<IAppointmentData>(initialData);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState({ title: "", message: "" });
 
@@ -36,18 +37,18 @@ const AppointmentForm = () => {
     try {
       const userIdObject = {
         id: userData?.userData?.id,
-        name: userData?.userData?.name || '',
-        email: userData?.userData?.email || '',
-        password: '',
+        name: userData?.userData?.name || "",
+        email: userData?.userData?.email || "",
+        password: "",
         age: userData?.userData?.age || 0,
         phone: userData?.userData?.phone || 0,
-        city: userData?.userData?.city || '',
-        address: userData?.userData?.address || ''
+        city: userData?.userData?.city || "",
+        address: userData?.userData?.address || "",
       };
 
       const categoryObject = {
         id: appointmentData.categoryId,
-        name: '',
+        name: "",
         price: 0,
       };
 
@@ -55,16 +56,16 @@ const AppointmentForm = () => {
         date: appointmentData.date,
         status: appointmentData.status,
         description: appointmentData.description,
-        user: userData?.userData?.id || '',
+        user: userData?.userData?.id || "",
         categoryId: appointmentData.categoryId,
         userId: userIdObject,
-        category: categoryObject
+        category: categoryObject,
       };
 
       const newAppointment = await createAppointment(appointmentPayload);
-      console.log('Cita creada:', newAppointment);
+      console.log("Cita creada:", newAppointment);
     } catch (error) {
-      console.error('Error creando la cita:', error);
+      console.error("Error creando la cita:", error);
       setAlertContent({ title: "Error", message: "Error creando la cita." });
       setShowAlert(true);
     }
@@ -117,8 +118,8 @@ const AppointmentForm = () => {
       </div>
 
       <AlertModal
-        showModal={showAlert}  
-        handleClose={() => setShowAlert(false)}  
+        showModal={showAlert}
+        handleClose={() => setShowAlert(false)}
         title={alertContent.title}
         message={alertContent.message}
       />

@@ -32,7 +32,7 @@ export default interface AppointmentProps {
   description: string;
   date: string;
   price:number;
-  status:string;
+  status:"Pendiente" | "Procesado" | "Pagado";
   user: UserProps; // También aquí debería ser un objeto UserProps
   category: CategoryProps;
   categoryId: string;
