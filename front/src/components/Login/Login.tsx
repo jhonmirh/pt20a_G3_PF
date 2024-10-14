@@ -10,7 +10,7 @@ import AlertModalLogin from "../AlertLgin/AlertModalLogin";
 const Login = () => {
   const { userData, setUserData } = useLoggin();
   const router = useRouter();
-  const startState: ILogin = { email: "", password: "" };
+  const startState: ILogin = { email: "", password: ""};
   const [showPassword, setShowPassword] = useState(false);
   const [dataUser, setData] = useState<ILogin>(startState);
   const [error, setError] = useState<ILoginError>({});
@@ -48,6 +48,7 @@ const Login = () => {
         password: user.password,
         city: user.city,
         orders: user.orders,
+        admin: user.admin,
       };
 
       delete userData.password;

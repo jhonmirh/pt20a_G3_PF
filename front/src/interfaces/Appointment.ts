@@ -19,8 +19,8 @@ export interface IAppointmentData {
   date: string;
   description: string;
   price:number;
-  status:string;
-  user: UserProps; // Ahora es un objeto de tipo UserProps
+  status:"Pendiente" | "Procesado" | "Pagado";
+  user: UserProps; 
   categoryId: string;
 }
 
