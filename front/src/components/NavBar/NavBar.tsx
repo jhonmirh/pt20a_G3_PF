@@ -32,17 +32,36 @@ export default function NavBar({ images }: NavBarProps) {
     router.push("/");
   };
 
- 
   const handleSearch = () => {
     if (searchTerm.trim() !== "") {
       router.push(`/search?query=${searchTerm}`);
     }
   };
 
+  // Función para verificar si el perfil está completo
+  const isProfileComplete = () => {
+    if (!userData || !userData.userData) return false;
+    const { age, phone, address, city } = userData.userData;
+    return age && phone && address && city;
+  };
+
+  // Función para manejar el clic en el logo
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Previene el comportamiento predeterminado de <Link>
+    
+    if (!isProfileComplete()) {
+      // Si el perfil no está completo, redirige a /completar-perfil
+      router.push("/completar-perfil");
+    } else {
+      // Si el perfil está completo, redirige a la página principal
+      router.push("/");
+    }
+  };
+
   return (
     <header className="relative bg-gray-900 shadow-md w-full">
       <div className="flex justify-between items-center p-4">
-        <Link href="/">
+        <Link href="#" onClick={handleLogoClick}>
           <Image src="/logo-JhonDay.png" alt="Logo" width={50} height={50} />
         </Link>
 
