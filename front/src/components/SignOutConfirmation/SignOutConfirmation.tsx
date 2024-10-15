@@ -20,13 +20,13 @@ const SignOutConfirmation: React.FC<SigOutModalProps> = ({
             onClick={onClose}
             className="bg-red-500 text-white px-4 py-2 rounded shadow-lg hover:bg-red-700"
           >
-            Cancel
+            Cancelar
           </button>
           <button
             onClick={onConfirm}
             className="bg-gray-900 text-white px-4 py-2 rounded shadow-lg hover:bg-gray-700"
           >
-            Confirm
+            Confirmar
           </button>
         </div>
       </div>

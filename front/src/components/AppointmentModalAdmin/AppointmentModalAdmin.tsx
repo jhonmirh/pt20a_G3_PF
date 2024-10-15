@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IAppointmentData } from "@/interfaces/Appointment";
 import { UserProps } from "@/interfaces/Appointment";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 import { useLoggin } from "@/context/logginContext";
+import AlertStatusModal from "../AlertStatusModal/AlertStatusModal";
 
 interface AppointmentModalProps {
   appointment: IAppointmentData[];
@@ -28,16 +29,25 @@ const AppointmentModalAdmin: React.FC<AppointmentModalProps> = ({
   const [editingAppointment, setEditingAppointment] =
     useState<IAppointment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Estados para los filtros
+
   const [filterDate, setFilterDate] = useState("");
   const [filterDescription, setFilterDescription] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
 
-  // Filtrar las citas
+  const [confirmModal, setConfirmModal] = useState({
+    show: false,
+    appointment: null as IAppointment | null,
+    newStatus: "Pendiente" as IAppointmentData["status"],
+  });
+
   const filteredAppointments = appointments.filter((app) => {
-    const matchesDate = filterDate ? new Date(app.date).toLocaleDateString() === new Date(filterDate).toLocaleDateString() : true;
-    const matchesDescription = app.description.toLowerCase().includes(filterDescription.toLowerCase());
+    const matchesDate = filterDate
+      ? new Date(app.date).toLocaleDateString() ===
+        new Date(filterDate).toLocaleDateString()
+      : true;
+    const matchesDescription = app.description
+      .toLowerCase()
+      .includes(filterDescription.toLowerCase());
     const matchesStatus = filterStatus ? app.status === filterStatus : true;
 
     return matchesDate && matchesDescription && matchesStatus;
@@ -75,37 +85,58 @@ const AppointmentModalAdmin: React.FC<AppointmentModalProps> = ({
     }
   };
 
-  const handleStatusChange = async (
-    id: string,
-    status: IAppointmentData["status"]
+  const handleStatusChange = (
+    appointment: IAppointment,
+    newStatus: IAppointmentData["status"]
   ) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/appointments/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${userData?.token || ""}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status }),
-        }
-      );
+    setConfirmModal({
+      show: true,
+      appointment,
+      newStatus,
+    });
+  };
 
-      if (!response.ok) {
-        throw new Error(`Error al actualizar estado: ${response.statusText}`);
+  const handleConfirmChange = async (
+    id: string,
+    newStatus: IAppointmentData["status"]
+  ) => {
+    if (confirmModal.appointment) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/appointments/${confirmModal.appointment.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${userData?.token || ""}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status: confirmModal.newStatus }),
+          }
+        );
+
+        if (!response.ok) throw new Error("Error al actualizar el estado");
+
+        const updatedAppointment = await response.json();
+        setAppointments((prev) =>
+          prev.map((app) =>
+            app.id === updatedAppointment.id ? updatedAppointment : app
+          )
+        );
+
+        setConfirmModal({
+          show: false,
+          appointment: null,
+          newStatus: "Pendiente",
+        });
+      } catch (error) {
+        console.error("Error al actualizar el estado:", error);
+        alert("No se pudo guardar el estado. Por favor, inténtalo de nuevo.");
       }
-
-      const updatedAppointment = await response.json();
-      setAppointments((prev) =>
-        prev.map((app) =>
-          app.id === updatedAppointment.id ? updatedAppointment : app
-        )
-      );
-    } catch (error) {
-      console.error("Error al actualizar el estado:", error);
-      alert("No se pudo guardar el estado. Por favor, inténtalo de nuevo.");
     }
+  };
+
+  const handleCancelChange = () => {
+    setConfirmModal({ show: false, appointment: null, newStatus: "Pendiente" });
   };
 
   const handleDelete = async (id: string) => {
@@ -127,7 +158,7 @@ const AppointmentModalAdmin: React.FC<AppointmentModalProps> = ({
         <h2 className="text-xl text-center text-gray-900 mb-4">
           Citas del Usuario
         </h2>
-        
+
         {/* Filtros */}
         <div className="mb-4">
           <input
@@ -155,7 +186,7 @@ const AppointmentModalAdmin: React.FC<AppointmentModalProps> = ({
             <option value="Pagado">Pagado</option>
           </select>
         </div>
-        
+
         <table className="min-w-full border border-gray-900">
           <thead className="bg-gray-900 text-white">
             <tr>
@@ -195,14 +226,14 @@ const AppointmentModalAdmin: React.FC<AppointmentModalProps> = ({
                           key={status}
                           onClick={() =>
                             handleStatusChange(
-                              appointment.id,
+                              appointment,
                               status as IAppointmentData["status"]
                             )
                           }
-                          className={`px-4 py-2 rounded ${
+                          className={`px-4 py-2  text-white rounded ${
                             appointment.status === status
-                              ? "bg-gray-700 text-white"
-                              : "bg-gray-300 text-gray-800"
+                              ? "bg-green-600 hover:bg-green-700"
+                              : "bg-gray-700 hover:bg-gray-900"
                           }`}
                         >
                           {status}
@@ -230,11 +261,31 @@ const AppointmentModalAdmin: React.FC<AppointmentModalProps> = ({
           </button>
         </div>
       </div>
+
       {isModalOpen && editingAppointment && (
         <AppointmentModal
           appointment={editingAppointment}
           onSave={handleModalSave}
           onClose={() => setIsModalOpen(false)}
+        />
+      )}
+
+      {confirmModal.show && confirmModal.appointment && (
+        <AlertStatusModal
+          title="Confirmar Cambio de Status"
+          message={`¿Estás seguro que quieres cambiar el estado de esta cita a "${confirmModal.newStatus}"?`}
+          showModal={confirmModal.show} 
+          handleClose={() => setConfirmModal({ ...confirmModal, show: false })} 
+          onConfirm={async () => {
+            if (confirmModal.appointment) {
+              await handleConfirmChange(
+                confirmModal.appointment.id,
+                confirmModal.newStatus
+              );
+            }
+            setConfirmModal({ ...confirmModal, show: false }); 
+          }}
+          onCancel={() => setConfirmModal({ ...confirmModal, show: false })}
         />
       )}
     </div>

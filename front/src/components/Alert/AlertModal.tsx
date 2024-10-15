@@ -34,3 +34,4 @@ const AlertModal: React.FC<AlertModalProps> = ({ showModal, handleClose, title, 
 };
 
 export default AlertModal;
+

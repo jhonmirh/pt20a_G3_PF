@@ -32,6 +32,7 @@ const AppointmentForm = () => {
     useState<IAppointmentData>(initialData);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState({ title: "", message: "" });
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // Nuevo estado para el modal de éxito
 
   const handleAddAppointment = async () => {
     try {
@@ -64,6 +65,14 @@ const AppointmentForm = () => {
 
       const newAppointment = await createAppointment(appointmentPayload);
       console.log("Cita creada:", newAppointment);
+      setAlertContent({ title: "Éxito", message: "Cita creada con éxito." });
+      setShowSuccessModal(true);
+
+     
+      setTimeout(() => {
+        router.push("/appointments");
+      }, 4000); 
+
     } catch (error) {
       console.error("Error creando la cita:", error);
       setAlertContent({ title: "Error", message: "Error creando la cita." });
@@ -116,6 +125,15 @@ const AppointmentForm = () => {
           Agregar Cita
         </button>
       </div>
+
+
+      <AlertModal
+        showModal={showSuccessModal}
+        handleClose={() => setShowSuccessModal(false)}
+        title={alertContent.title}
+        message={alertContent.message}
+      />
+
 
       <AlertModal
         showModal={showAlert}

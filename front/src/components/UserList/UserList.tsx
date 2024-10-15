@@ -20,7 +20,7 @@ const UserList = () => {
   const [userToDelete, setUserToDelete] = useState<IUsersUpdate | null>(null);
   const [appointments, setAppointments] = useState<IAppointmentData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [alertModalOpen, setAlertModalOpen] = useState(false); // Estado para el modal de alerta
+  const [alertModalOpen, setAlertModalOpen] = useState(false); 
 
   /////////////////////////
   const [showModal, setShowModal] = useState(false);

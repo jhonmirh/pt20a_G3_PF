@@ -195,7 +195,7 @@ export default function NavBar({ images }: NavBarProps) {
                 className="text-red-600 hover:text-red-800"
                 onClick={handleSignOut}
               >
-                Sign Out
+                Cerrar Sesión
               </button>
 
               <Link
@@ -228,7 +228,7 @@ export default function NavBar({ images }: NavBarProps) {
                 href="/login"
                 className="text-white hover:text-blue-500 transition-colors duration-300"
               >
-                Sign In
+                Ingresar
               </Link>
               <Link
                 href="/register"
