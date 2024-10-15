@@ -48,9 +48,9 @@ const EditCategory: React.FC<EditCategoryFormProps> = ({
             <div>
               <label className="block text-gray-700 mb-2">Correo Electrónico</label>
               <input
-                type="number"
+                type="price"
                 value={price}
-                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)} 
+                onChange={(e) => setPrice(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />

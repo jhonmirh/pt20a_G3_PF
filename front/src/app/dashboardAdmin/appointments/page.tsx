@@ -1,7 +1,11 @@
-import React from "react";
-import AppointmentList from "@/components/AppointmentsListAdmin/AppointmentListAdmin";
-const page = () => {
-  return <AppointmentList />;
-};
+import React from 'react'
 
-export default page;
+const page = () => {
+  return (
+    <div>
+      TODOS LOS TURNOS 
+    </div>
+  )
+}
+
+export default page

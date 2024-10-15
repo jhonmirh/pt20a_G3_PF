@@ -1,4 +1,6 @@
-"use client";
+
+'use client'
+
 
 import React, { useState } from "react";
 import AlertModal from "../Alert/AlertModal";
@@ -17,7 +19,7 @@ interface CardPropsAside extends CardsPropsAside {
   description?: string;
   categoryId: string;
   image: string;
-  price: number;
+  price: string;
   ribbonText: string;
 }
 
@@ -45,15 +47,10 @@ const AsideBar: React.FC<CardPropsAside> = ({
     price,
   };
 
-  const handleLinkClick = async (
-    event: React.MouseEvent,
-    categoryId: string
-  ) => {
+  const handleLinkClick = async (event: React.MouseEvent, categoryId: string) => {
     event.stopPropagation();
     try {
-      const response = await fetch(
-        `${APIURL}/categories/${categoryId}/products`
-      );
+      const response = await fetch(`${APIURL}/categories/${categoryId}/products`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -78,9 +75,7 @@ const AsideBar: React.FC<CardPropsAside> = ({
           height: isHovered ? "370px" : "300px",
           borderRadius: "12px",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-          backgroundColor: isHovered
-            ? "rgba(17, 24, 39, 0.85)"
-            : "rgba(255, 255, 255, 0.85)",
+          backgroundColor: isHovered ? "rgba(17, 24, 39, 0.85)" : "rgba(255, 255, 255, 0.85)",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -89,16 +84,12 @@ const AsideBar: React.FC<CardPropsAside> = ({
         onClick={(e) => handleLinkClick(e, categoryId)}
       >
         <div className="absolute top-0 left-0 right-0 flex justify-center mt-2">
-          {userData?.token && <Agg category={category} />}
+          <Agg category={category} />
         </div>
 
         <div className="flex flex-col items-center space-y-2 mt-12">
           <Image
-            src={
-              isHovered
-                ? hoverImageUrl || "/default-image.jpg"
-                : imageUrl || "/default-image.jpg"
-            }
+            src={isHovered ? hoverImageUrl || "/default-image.jpg" : imageUrl || "/default-image.jpg"}
             alt={name}
             width={60}
             height={60}
@@ -106,13 +97,9 @@ const AsideBar: React.FC<CardPropsAside> = ({
 
           <h5 className="text-sm font-bold text-center">{name}</h5>
 
-          <p className="text-lg font-bold text-center text-gray-600">
-            ${price}
-          </p>
+          <p className="text-lg font-bold text-center text-gray-600">${price}</p>
 
-          {isHovered && (
-            <p className="text-xs text-center px-2">{description}</p>
-          )}
+          {isHovered && <p className="text-xs text-center px-2">{description}</p>}
         </div>
 
         <div
@@ -124,9 +111,7 @@ const AsideBar: React.FC<CardPropsAside> = ({
             borderBottomRightRadius: "12px",
           }}
         >
-          <p className="text-xs font-semibold text-center leading-tight">
-            {ribbonText}
-          </p>
+          <p className="text-xs font-semibold text-center leading-tight">{ribbonText}</p>
           <div
             className={`flex items-center justify-center rounded-full p-1 transition-colors duration-300 ${
               isHovered ? "bg-gray-900 text-white" : "bg-white text-gray-900"

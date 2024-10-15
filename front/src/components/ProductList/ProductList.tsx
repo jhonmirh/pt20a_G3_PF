@@ -2,14 +2,13 @@
 
 import { useLoggin } from "@/context/logginContext";
 import React, { useEffect, useState } from "react";
+
 import { deleteCategory } from "@/helpers/category.helper";
-import { updateCategory } from "@/helpers/category.helper";
-import { useRouter } from "next/navigation";
 import EditCategory from "../EditCategory/EditCategory";
 import ICategory from "@/interfaces/Category";
-import CreateProductModal from "../CreateProductModal/CreateProductModal";
-import AlertModal from "../Alert/AlertModal";
+import { updateCategory } from "@/helpers/category.helper";
 
+import CreateProductModal from "../CreateProductModal/CreateProductModal";
 
 const CategoryList = () => {
   const { userData } = useLoggin();
@@ -36,6 +35,7 @@ const CategoryList = () => {
 
   const handleProductCreated = async () => {
     try {
+      // Opcional: Recarga las categorías desde la API si es necesario
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/categories`,
         {
@@ -48,38 +48,13 @@ const CategoryList = () => {
       if (!response.ok) throw new Error("Error al recargar las categorías");
 
       const data = await response.json();
-      setCategories(data); 
+      setCategories(data); // Actualiza las categorías en el estado
     } catch (error) {
       console.error("Error al recargar las categorías:", error);
     } finally {
-      setProductModalOpen(false); 
+      setProductModalOpen(false); // Cierra el modal en cualquier caso
     }
   };
-
-  /////////////////////////
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({
-    title: "",
-    message: "",
-  });
-  const router = useRouter();
-  useEffect(() => {
-    if (!userData?.token && !userData?.userData?.address) {
-      setModalContent({
-        title: "Acceso Denegado",
-        message: "Debe estar Logueado para Acceder a Este Espacio",
-      });
-      setShowModal(true);
-      console.log("Mostrando Modal: ", showModal);
-    }
-  }, [userData, showModal]);
-
-  const handleCloseModalUser = () => {
-    setShowModal(false);
-    router.push("/login");
-  };
-
-  ////////////////////////
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -137,10 +112,13 @@ const CategoryList = () => {
         setDeleteModalOpen(false);
         setCategoryToDelete(null);
       } catch (error: unknown) {
+        // Especifica que el tipo de error es 'unknown'
         if (error instanceof Error) {
+          // Verifica si el error es una instancia de Error
           console.error("Error al eliminar la categoría:", error.message);
+          // Aquí puedes agregar lógica para manejar el error, como mostrar una notificación
         } else {
-          console.error("Error desconocido:", error);
+          console.error("Error desconocido:", error); // Maneja el caso donde el error no es de tipo 'Error'
         }
       }
     }
@@ -148,6 +126,7 @@ const CategoryList = () => {
 
   return (
     <div className="p-4">
+      {/* Campo de filtro con ancho completo */}
       <input
         type="text"
         placeholder="Buscar por nombre de categoría..."
@@ -155,6 +134,7 @@ const CategoryList = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-4 p-2 border border-gray-300 rounded w-full"
       />
+
       <table className="min-w-full border border-gray-900">
         <thead className="bg-gray-900 text-white">
           <tr>
@@ -267,12 +247,6 @@ const CategoryList = () => {
       )}
 
       
-      <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModalUser}
-        title={modalContent.title}
-        message={modalContent.message}
-      />
     </div>
   );
 };

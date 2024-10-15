@@ -14,7 +14,7 @@ export default function DashboardLayout({
             href="/dashboardAdmin/appointments"
             className="block p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-all"
           >
-            Turnos Reservados
+            Turnos Atendidos
           </Link>
           <Link
             href="/dashboardAdmin/categories"

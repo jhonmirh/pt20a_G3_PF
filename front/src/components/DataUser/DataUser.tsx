@@ -15,12 +15,12 @@ const DataUser = () => {
   });
 
   useEffect(() => {
-    if (!userData?.token) {
+    if (!userData) {
       setModalContent({
-        title: "Acceso Denegado",
-        message: "Debe estar Logueado para Acceder a Este Espacio",
+        title: "Access Denied",
+        message: "You must be logged in to view your Profiles",
       });
-      setShowModal(true);
+      setShowModal(true); 
     }
   }, [userData]);
 
@@ -29,11 +29,11 @@ const DataUser = () => {
     router.push("/login"); 
   };
 
-  if (!userData?.token) {
+  if (!userData) {
     return (
       <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModal}
+        show={showModal}
+        onClose={handleCloseModal}
         title={modalContent.title}
         message={modalContent.message}
       />
@@ -46,7 +46,7 @@ const DataUser = () => {
       <div className="flex flex-col justify-between m-10 p-4 max-w-xs w-full bg-white border border-gray-200 rounded-lg shadow-lg shadow-gray-800 dark:bg-gray-600  dark:border-gray-700">
         <div className="mb-4 text-center">
           <h2 className="text-2xl font-semibold text-gray-700 dark:text-white">
-            Perfil de {userData?.userData.name} en JhonDay 
+            Perfil de {userData.userData.name} en JhonDay 
           </h2>
         </div>
       </div>

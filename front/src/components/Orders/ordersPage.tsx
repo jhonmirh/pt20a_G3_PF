@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import React, { useEffect, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,7 +6,8 @@ import { useLoggin } from "@/context/logginContext";
 import { getOrders } from "@/helpers/orders.helper";
 import { IOrder } from "@/interfaces/LoginRegister";
 import Card from "../Card/Card";
-import AlertModal from "../Alert/AlertModal";
+import AlertModal from "../Alert/AlertModal"; 
+
 
 const OrdersPage = () => {
   const { userData } = useLoggin();
@@ -17,23 +18,20 @@ const OrdersPage = () => {
     title: "",
     message: "",
   });
-  console.log("====================================");
-  console.log(userData?.token);
-  console.log("====================================");
+
   useEffect(() => {
-    if (!userData?.token) {
+    if (!userData) {
       setModalContent({
-        title: "Acceso Denegado",
-        message: "Debe estar Logueado para Acceder a Este Espacio",
+        title: "Access Denied",
+        message: "You must be logged in to view your Orders",
       });
-      setShowModal(true);
-      console.log("Mostrando Modal: ", showModal); // Agregar para verificar el valor
+      setShowModal(true); 
     }
-  }, [userData, showModal]);
+  }, [userData]);
 
   const handleCloseModal = () => {
     setShowModal(false);
-    router.push("/login");
+    router.push("/login"); 
   };
 
   const fetchData = useCallback(async () => {
@@ -55,11 +53,12 @@ const OrdersPage = () => {
     }
   }, [fetchData, userData]);
 
-  if (!userData?.token) {
+
+  if (!userData) {
     return (
       <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModal}
+        show={showModal}
+        onClose={handleCloseModal}
         title={modalContent.title}
         message={modalContent.message}
       />
@@ -87,17 +86,12 @@ const OrdersPage = () => {
                 <div className="flex flex-wrap gap-4">
                   {order.products.length > 0 ? (
                     order.products.map((product) => (
-                      <div
-                        key={product.id}
-                        className="w-full sm:w-1/2 md:w-1/3 p-2"
-                      >
+                      <div key={product.id} className="w-full sm:w-1/2 md:w-1/3 p-2">
                         <Card {...product} />
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-700 dark:text-gray-200">
-                      No products found
-                    </p>
+                    <p className="text-gray-700 dark:text-gray-200">No products found</p>
                   )}
                 </div>
               </div>
@@ -111,8 +105,8 @@ const OrdersPage = () => {
       </div>
 
       <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModal}
+        show={showModal}
+        onClose={handleCloseModal}
         title={modalContent.title}
         message={modalContent.message}
       />
