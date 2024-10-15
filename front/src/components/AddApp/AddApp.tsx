@@ -53,7 +53,7 @@ const AppointmentForm = () => {
         price: 0,
       };
 
-    const appointmentPayload = {
+      const appointmentPayload = {
         date: appointmentData.date,
         status: appointmentData.status,
         description: appointmentData.description,
