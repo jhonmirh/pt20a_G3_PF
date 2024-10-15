@@ -2,39 +2,10 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-//import { useRouter } from 'next/router';
-import { ICompleteProfile, IRegister, TCompleteProfileError, TRegisterError } from '@/interfaces/LoginRegister';
+import { TCompleteProfileError } from '@/interfaces/LoginRegister';
 import { useLoggin } from '@/context/logginContext';
+import { validateCompleteProfile } from '@/helpers/validate';
 
-export function validateCompleteProfile(values: ICompleteProfile): TCompleteProfileError {
-    const errors: TCompleteProfileError = {};
-    
-    if (values.phone === undefined) {
-        errors.phone = "Número Telefónico es Requerido.";
-    } else if (typeof values.phone !== 'number' || !/^\d{10}$/.test(values.phone.toString())) {
-        errors.phone = "El número de teléfono debe ser numérico y tener 10 dígitos.";
-    }
-
-    if (values.age === undefined || values.age === null) {
-        errors.age = "Edad es Requerido.";
-    } else if (typeof values.age !== 'number' || values.age < 18 || values.age > 99 || !/^\d{2}$/.test(values.age.toString())) {
-        errors.age = "La edad debe ser un número de dos dígitos mayor o igual a 18";
-    }
-
-    if (!values.city) {
-        errors.city = "Ciudad es Requerido.";
-    } else if (!/^[a-zA-Z]{3,30}$/.test(values.city)) {
-        errors.city = "La ciudad debe contener sólo letras y tener entre 3 y 30 caracteres.";
-    }
-
-    if (!values.address) {
-        errors.address = "Dirección es Requerido.";
-    } else if (!/^[a-zA-Z0-9\s\.,_-áéíóúÁÉÍÓÚñÑ]{3,30}$/.test(values.address)) {
-        errors.address = "La dirección debe contener entre 3 y 30 caracteres";
-    }
-
-    return errors;
-}
 
 const CompleteProfile: React.FC = () => {
     const { setUserData } = useLoggin();
@@ -44,54 +15,46 @@ const CompleteProfile: React.FC = () => {
     const [city, setCity] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); 
-    const [error, setError] = useState<TRegisterError>({});
+    const [error, setError] = useState<TCompleteProfileError>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isProfileUpdated, setIsProfileUpdated] = useState(false);
     const router = useRouter();    
 
-
-    // const handleSubmit = async (e: React.FormEvent) => {
-    // e.preventDefault();
-    // setSuccessMessage('');
-    // setErrorMessage('');
-    
-
-    // const sessionData = JSON.parse(localStorage.getItem('sessionStart') || '{}');
-    // const token = sessionData.token;
-    // console.log("token utilizado en el front", token)
-
-    
-    // if (!token) {
-    //     setErrorMessage('No se encontró un token. Por favor, inicia sesión.');
-    //     return;
-    // }
-    // try{
-    // const response = await fetch('http://localhost:3010/auth/update-profile', {
-    //     method: 'PATCH',
-    //     headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({  age, phone, address, city }),
+    // Valida los campos en tiempo real
+    const handleFieldChange = (field: keyof TCompleteProfileError, value: any) => {
+        let updatedValue = { age, phone, address, city };
         
-    // });
+        if (field === 'age') {
+            updatedValue.age = value;
+            setAge(value);
+        } else if (field === 'phone') {
+            updatedValue.phone = value;
+            setPhone(value);
+        } else if (field === 'address') {
+            updatedValue.address = value;
+            setAddress(value);
+        } else if (field === 'city') {
+            updatedValue.city = value;
+            setCity(value);
+        }
 
-    // if (response.ok) {
-    //     const updatedUserData = await response.json(); // Asegúrate de que el backend devuelva el usuario actualizado
-    //     setUserData(updatedUserData); // Actualiza el contexto con los nuevos datos
-    //     setSuccessMessage('Perfil completado con éxito');
-    //         setTimeout(() => {
-    //         router.push('/dashboard/profiles'); 
-    //     }, 2000);
-    // } else {
-    //     const data = await response.json();
-    //     setErrorMessage(data.message || 'Error al actualizar el perfil');
-    //     }
-    // } catch (error) {
-    //     setErrorMessage('Error de red. Por favor, intenta nuevamente.');
-    // }
+        // Realiza las validaciones con el valor actualizado
+        const validationErrors = validateCompleteProfile(updatedValue);
+        setError(validationErrors);
 
-    // };
+        // Actualiza los errores solo para el campo actual
+    const updatedErrors = { ...error };
+    if (validationErrors[field]) {
+        updatedErrors[field] = validationErrors[field];
+    } else {
+        delete updatedErrors[field];
+    }
+
+        
+        setError(updatedErrors);
+    };
+
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -176,7 +139,7 @@ const CompleteProfile: React.FC = () => {
             id="age"
             name="age"
             value={age}
-            onChange={(e) => setAge(e.target.valueAsNumber)}
+            onChange={(e) => handleFieldChange('age', e.target.valueAsNumber)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus :ring-blue-500 dark:focus:border-blue-500"
             placeholder="Sólo números mayores que 18"
             required
@@ -196,7 +159,7 @@ const CompleteProfile: React.FC = () => {
             id="phone"
             name="phone"
             value={phone || ""}
-            onChange={(e) => setPhone(e.target.valueAsNumber)}
+            onChange={(e) => handleFieldChange('phone', e.target.valueAsNumber)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Only number 10 Characters"
             required
@@ -216,7 +179,7 @@ const CompleteProfile: React.FC = () => {
             id="city"
             name="city"
             value={city || ""}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(e) => handleFieldChange('city', e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="En que Ciudad Vives"
             required
@@ -236,7 +199,7 @@ const CompleteProfile: React.FC = () => {
             id="address"
             name="address"
             value={address || ""}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => handleFieldChange('address', e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Tu Dirección Completa Estado Calle Carrera  ..."
             required
