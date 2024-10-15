@@ -1,11 +1,7 @@
-import React from 'react'
-
+import React from "react";
+import AppointmentList from "@/components/AppointmentsListAdmin/AppointmentListAdmin";
 const page = () => {
-  return (
-    <div>
-      TODOS LOS TURNOS 
-    </div>
-  )
-}
+  return <AppointmentList />;
+};
 
-export default page
+export default page;

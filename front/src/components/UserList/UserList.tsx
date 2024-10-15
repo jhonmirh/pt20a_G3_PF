@@ -3,8 +3,12 @@
 import { useLoggin } from "@/context/logginContext";
 import React, { useEffect, useState } from "react";
 import { IUsersUpdate } from "@/interfaces/LoginRegister";
-import EditUserForm from "../Modal/Modal";
 import { updateUserData } from "@/helpers/users.helper";
+import { IAppointmentData } from "@/interfaces/Appointment";
+import EditUserForm from "../Modal/Modal";
+import AppointmentModalAdmin from "../AppointmentModalAdmin/AppointmentModalAdmin";
+import AlertModal from "../Alert/AlertModal"; // Asegúrate de importar el modal de alerta
+import { useRouter } from "next/navigation";
 
 const UserList = () => {
   const { userData } = useLoggin();
@@ -14,6 +18,34 @@ const UserList = () => {
   const [editingUsers, setEditingUsers] = useState<IUsersUpdate | null>(null);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IUsersUpdate | null>(null);
+  const [appointments, setAppointments] = useState<IAppointmentData[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alertModalOpen, setAlertModalOpen] = useState(false); // Estado para el modal de alerta
+
+  /////////////////////////
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    message: "",
+  });
+  const router = useRouter();
+  useEffect(() => {
+    if (!userData?.token && !userData?.userData?.address) {
+      setModalContent({
+        title: "Acceso Denegado",
+        message: "Debe estar Logueado para Acceder a Este Espacio",
+      });
+      setShowModal(true);
+      console.log("Mostrando Modal: ", showModal);
+    }
+  }, [userData, showModal]);
+
+  const handleCloseModalUser = () => {
+    setShowModal(false);
+    router.push("/login");
+  };
+
+  ////////////////////////
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,7 +58,6 @@ const UserList = () => {
         );
         const data = await response.json();
 
-        // Asegúrate de que data es un array
         if (Array.isArray(data)) {
           setUsers(data);
           setFilteredUsers(data);
@@ -92,9 +123,39 @@ const UserList = () => {
     }
   };
 
+  const handleEditAppointments = async (userId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/appointments/${userId}/appointments`,
+        {
+          headers: { Authorization: `Bearer ${userData?.token}` },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Error en la respuesta: ${response.status} ${response.statusText}`
+        );
+      }
+      const data = await response.json();
+      console.log("Citas obtenidas:", data);
+      if (Array.isArray(data) && data.length > 0) {
+        setAppointments(data);
+        setIsModalOpen(true);
+      } else {
+        setAlertModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error al obtener las citas del usuario:", error);
+      setAlertModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="p-4">
-      {/* Campo de filtro con ancho completo */}
       <input
         type="text"
         placeholder="Buscar por nombre o email..."
@@ -134,6 +195,12 @@ const UserList = () => {
                       className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-500"
                     >
                       Eliminar
+                    </button>
+                    <button
+                      onClick={() => handleEditAppointments(user.id)} // Llama a la función para editar citas
+                      className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-500"
+                    >
+                      Editar Cita
                     </button>
                   </div>
                 </td>
@@ -177,22 +244,31 @@ const UserList = () => {
       {editingUsers && (
         <EditUserForm
           users={editingUsers}
-          onSave={async (user) => {
-            try {
-              const updatedUser = await updateUserData(
-                user.id,
-                user,
-                userData?.token
-              );
-              setUsers((prev) =>
-                prev.map((u) => (u.id === updatedUser.id ? updatedUser : u))
-              );
-              setEditingUsers(null);
-            } catch (error) {
-              console.error("Error al guardar los cambios:", error);
-            }
-          }}
+          onSave={handleSave}
           onCancel={() => setEditingUsers(null)}
+        />
+      )}
+
+      {alertModalOpen && (
+        <AlertModal
+          showModal={alertModalOpen}
+          handleClose={() => setAlertModalOpen(false)}
+          title="No hay citas"
+          message="El usuario no posee citas registradas."
+        />
+      )}
+
+      <AlertModal
+        showModal={showModal}
+        handleClose={handleCloseModalUser}
+        title={modalContent.title}
+        message={modalContent.message}
+      />
+
+      {isModalOpen && (
+        <AppointmentModalAdmin
+          appointment={appointments}
+          onClose={handleCloseModal}
         />
       )}
     </div>

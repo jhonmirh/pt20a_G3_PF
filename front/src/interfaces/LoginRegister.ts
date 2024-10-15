@@ -1,5 +1,5 @@
 import IProduct from "./Products";
-
+import { IAppointmentData } from "./Appointment";
 export interface ILogin {
     email: string;
     password: string;
@@ -34,6 +34,7 @@ export interface IUsersUpdate {
     password: string;
     passwordConfirm?: string;
     admin?: boolean;
+    appointments?: IAppointmentData[];
   }
   
 

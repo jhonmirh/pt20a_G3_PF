@@ -1,14 +1,14 @@
-'use client'
+"use client";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { NavBarProps } from "./types";
+import { useRouter } from "next/navigation";
+import { useLoggin } from "@/context/logginContext";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import SignOutConfirmation from "../SignOutConfirmation/SignOutConfirmation";
 import Carousel from "../Carousel/Carousel";
-import { useLoggin } from "@/context/logginContext";
 
 export default function NavBar({ images }: NavBarProps) {
   const { userData, setUserData } = useLoggin();
@@ -39,7 +39,7 @@ export default function NavBar({ images }: NavBarProps) {
     <header className="relative bg-gray-900 shadow-md w-full">
       <div className="flex justify-between items-center p-4">
         <Link href="/">
-          <Image src="/logo-JhonDay.png" alt="Logo" width={50} height={50} />
+          <Image src="/logo-JhonDay3.png" alt="Logo" width={50} height={50} />
         </Link>
 
         <div className="relative flex items-center w-full max-w-md">
@@ -74,10 +74,9 @@ export default function NavBar({ images }: NavBarProps) {
         </div>
 
         <nav className="flex items-center space-x-6">
-          <Link href="/category" className="text-white hover:text-blue-500 transition-colors duration-300">
-            Categoria
-          </Link>
-
+    
+    
+    {userData?.userData.admin &&
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="flex items-center text-white hover:text-blue-500 transition-colors duration-300">
@@ -136,6 +135,9 @@ export default function NavBar({ images }: NavBarProps) {
               </Menu.Items>
             </Transition>
           </Menu>
+}
+
+
 
           {userData ? (
             <>
@@ -143,7 +145,10 @@ export default function NavBar({ images }: NavBarProps) {
                 <div>
                   <Menu.Button className="flex items-center text-white hover:text-blue-500 transition-colors duration-300">
                     {userData?.userData?.name}
-                    <ChevronDownIcon className="w-5 h-5 ml-1" aria-hidden="true" />
+                    <ChevronDownIcon
+                      className="w-5 h-5 ml-1"
+                      aria-hidden="true"
+                    />
                   </Menu.Button>
                 </div>
                 <Transition
@@ -186,12 +191,21 @@ export default function NavBar({ images }: NavBarProps) {
                 </Transition>
               </Menu>
 
-              <button className="text-red-600 hover:text-red-800" onClick={handleSignOut}>
+              <button
+                className="text-red-600 hover:text-red-800"
+                onClick={handleSignOut}
+              >
                 Sign Out
               </button>
 
-              <Link href="/appointments" className="flex items-center p-2" title="Your Appointment">
-                <span className="ml-1 text-white hover:text-blue-500">Citas</span>
+              <Link
+                href="/appointments"
+                className="flex items-center p-2"
+                title="Your Appointment"
+              >
+                <span className="ml-1 text-white hover:text-blue-500">
+                  Citas
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 text-white hover:text-blue-500"
@@ -210,10 +224,16 @@ export default function NavBar({ images }: NavBarProps) {
             </>
           ) : (
             <>
-              <Link href="/login" className="text-white hover:text-blue-500 transition-colors duration-300">
+              <Link
+                href="/login"
+                className="text-white hover:text-blue-500 transition-colors duration-300"
+              >
                 Sign In
               </Link>
-              <Link href="/register" className="text-white hover:text-blue-500 transition-colors duration-300">
+              <Link
+                href="/register"
+                className="text-white hover:text-blue-500 transition-colors duration-300"
+              >
                 Registro
               </Link>
             </>

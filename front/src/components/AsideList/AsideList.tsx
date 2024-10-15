@@ -29,7 +29,7 @@ const AsideList = async () => {
       description: imageObj ? imageObj.description : "",
       ribbonText: imageObj ? imageObj.ribbonText : "",
       image: imageObj ? imageObj.image: "", 
-      price: category.price || "0.00", // Adjust based on your data structure
+      price: Number(category.price),
     };
   });
 

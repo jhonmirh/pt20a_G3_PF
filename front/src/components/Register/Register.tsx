@@ -137,7 +137,7 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSubmitted(true); // Mark form as submitted to trigger error messages
+    setIsSubmitted(true); 
 
     const validationErrors = validateRegisterLogin(dataUser);
 
@@ -160,7 +160,7 @@ const Register = () => {
       setShowModal(true);
       setTimeout(() => {
         handleCloseModal();
-      }, 2000);
+      }, 5000);
     } catch (error: any) {
       console.error(error);
       const errorMessage = error.message || "Se produjo un error inesperado durante el registro.";
