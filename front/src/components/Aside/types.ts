@@ -5,7 +5,7 @@ interface CardsPropsAside {
     hoverImageUrl?: string;
     categoryId:string;
     image:string;
-    price: string;
+    price: number;
   }
 
 export default CardsPropsAside;

@@ -5,13 +5,16 @@ import Image from "next/image";
 
 const images = [
   {
-    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727550298/carousel/eosses4astr0jfpl4xty.jpg",
+    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1728947775/carousel/dalawexubarqmhmpsrhw.jpg",
   },
   {
-    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727549838/carousel/uaobiquq2nopuxiqvige.jpg",
+    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1728948073/carousel/uphzmu1et1ocnwvbhv69.jpg",
   },
   {
-    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1727550298/carousel/eosses4astr0jfpl4xty.jpg",
+    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1728947775/carousel/dalawexubarqmhmpsrhw.jpg",
+  },
+  {
+    src: "https://res.cloudinary.com/dgsk4faek/image/upload/v1728948073/carousel/uphzmu1et1ocnwvbhv69.jpg",
   },
 ];
 
@@ -21,7 +24,7 @@ const Carousel: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Cambia el tiempo de intervalo a 5 segundos
+    }, 5000); 
 
     return () => clearInterval(interval);
   }, []);
@@ -40,9 +43,9 @@ const Carousel: React.FC = () => {
             <Image
               src={image.src}
               alt={`Slide ${index}`}
-              fill // Use fill instead of layout="fill"
-              className="w-full h-full object-cover" // Use object-cover with CSS
-              style={{ objectFit: 'cover' }} // Maintain the cover style
+              fill 
+              className="w-full h-full object-cover"
+              style={{ objectFit: 'cover' }}
             />
           </div>
         ))}
