@@ -17,6 +17,11 @@ const CheckoutButton = ({ appointment }: { appointment: IAppointmentData }) => {
   }, []);
 
   const handleClick = async () => {
+    localStorage.setItem('activeAppointmentId', appointment.id);
+    console.log('Proceeding to checkout with appointment ID:', appointment.id);
+    console.log('====================================');
+    console.log(localStorage);
+    console.log('====================================');
     if (!stripe) {
       console.error('Stripe.js no se ha cargado correctamente.');
       return;
@@ -49,6 +54,9 @@ const CheckoutButton = ({ appointment }: { appointment: IAppointmentData }) => {
       console.error('Error redirigiendo a Stripe:', error);
     }
   };
+
+
+ 
 
   return (
     <button

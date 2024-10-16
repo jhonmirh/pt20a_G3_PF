@@ -16,6 +16,7 @@
     "@maptiler/sdk": "^2.3.0",
     "@nestjs/config": "^3.2.3",
     "@prisma/client": "^5.20.0",
+    "@react-oauth/google": "^0.12.1",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.7.0",
     "@types/micro": "^7.3.7",

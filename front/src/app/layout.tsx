@@ -7,7 +7,18 @@ import Footer from "@/components/Footer/Footer";
 import ShowComponent from "@/components/ShowComponent/ShowComponent";
 import "./globals.css";
 import AsideList from "@/components/AsideList/AsideList";
-import Chatbot from "@/components/chatbot/chatbot"
+import Chatbot from "@/components/chatbot/chatbot";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+const clientId = process.env.GOOGLE_CLIENT_ID || "";
+
+console.log("ClientId:", process.env.GOOGLE_CLIENT_ID);
+
+if (!clientId) {
+  console.error(
+    "Google Client ID no está definido. Verifica tus variables de entorno."
+  );
+}
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,23 +59,24 @@ export default async function RootLayout({
           backgroundRepeat: "no-repeat",
         }}
       >
-        <LogginProvider>
-          {/* Mostrar NavBar y AsideList solo en rutas donde no esté login/register */}
+        <GoogleOAuthProvider clientId={clientId}>
+          <LogginProvider>
+            {/* Mostrar NavBar y AsideList solo en rutas donde no esté login/register */}
             <NavBar images={images} />
-          <ShowComponent>
+            <ShowComponent>
+              <div className="flex flex-col items-center mb-4">
+                <AsideList />
+              </div>
+            </ShowComponent>
 
-            <div className="flex flex-col items-center mb-4">
-              <AsideList />
-            </div>
-          </ShowComponent>
+            {/* Siempre mostrar el contenido principal */}
+            <div className="flex-1 flex justify-center">{children}</div>
 
-          {/* Siempre mostrar el contenido principal */}
-          <div className="flex-1 flex justify-center">{children}</div>
-
-          {/* El footer se muestra en todas las páginas */}
-          <Chatbot />
-          <Footer />
-        </LogginProvider>
+            {/* El footer se muestra en todas las páginas */}
+            <Chatbot />
+            <Footer />
+          </LogginProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

@@ -36,7 +36,7 @@ export async function createAppointment(data: { date: string; description: strin
   
   
 
-export const updateAppointment = async (id: string, data: { description: string, date: string }) => {
+export const updateAppointment = async (id: string, data: { description: string, date: string, status:string}) => {
     const response = await fetch(`${APIURL}/appointments/${id}`, {
       method: 'PATCH',
       headers: {

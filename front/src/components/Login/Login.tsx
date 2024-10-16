@@ -6,16 +6,89 @@ import { loginUser } from "@/helpers/auth.helper";
 import { validateLogin, validatePassword } from "@/helpers/validate";
 import { ILogin, ILoginError } from "@/interfaces/LoginRegister";
 import AlertModalLogin from "../AlertLgin/AlertModalLogin";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const { userData, setUserData } = useLoggin();
+
+  const { loginWithGoogle } = useLoggin();
+
   const router = useRouter();
-  const startState: ILogin = { email: "", password: ""};
+  const startState: ILogin = { email: "", password: "" };
   const [showPassword, setShowPassword] = useState(false);
   const [dataUser, setData] = useState<ILogin>(startState);
   const [error, setError] = useState<ILoginError>({});
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
+
+  const handleGoogleLoginSuccess = async (response: any) => {
+    try {
+      const token = response.credential;
+      console.log("Google Token:", token);
+
+      const googleLoginResponse = await loginWithGoogle({ credential: token });
+      const { user, token: authToken } = googleLoginResponse;
+
+      // Almacena el token JWT del backend en el almacenamiento local
+      localStorage.setItem("token", authToken);
+
+      // Decodificación opcional para verificar el contenido del token
+      const decodedToken = JSON.parse(atob(authToken.split(".")[1]));
+      console.log("Decoded Token Front:", decodedToken);
+
+      if (!user.name || !user.email || !user.phone) {
+        console.error("Faltan datos del usuario en la respuesta:", user);
+
+        // Guarda lo que tengas del usuario para redirigir a completar el perfil
+        setUserData({ token: authToken, userData: user });
+        localStorage.setItem(
+          "sessionStart",
+          JSON.stringify({ token: authToken, userData: user })
+        );
+
+        // Redirigir al formulario de completar perfil
+        router.push("/completar-perfil");
+        return;
+      }
+
+      // Actualizar el contexto con la información completa del usuario
+      setUserData({ token: authToken, userData: user });
+      localStorage.setItem(
+        "sessionStart",
+        JSON.stringify({ token: authToken, userData: user })
+      );
+      console.log("User Data set:", { token: authToken, userData: user });
+
+      // Verificar datos del perfil y redireccionar si está incompleto
+      if (!user.age || !user.phone || !user.address || !user.city) {
+        router.push("/completar-perfil");
+      } else {
+        // Mostrar el modal de bienvenida si el perfil está completo
+        setModalContent({
+          title:
+            "Bienvenido a Tu Centro de Servicios Tecnológicos Soluciones JhonDay",
+          message: "Login con Google exitoso",
+        });
+        setShowModal(true);
+      }
+    } catch (error: any) {
+      console.error("Error durante el Login con Google:", error);
+      setModalContent({
+        title: "Error",
+        message:
+          error.message ||
+          "Un error inesperado ocurrió durante el login con Google.",
+      });
+      setShowModal(true);
+    }
+  };
+  const handleGoogleLoginFailure = () => {
+    setModalContent({
+      title: "Error",
+      message: "Login con Google fallido. Intente nuevamente.",
+    });
+    setShowModal(true);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -218,15 +291,21 @@ const Login = () => {
         <button
           disabled={Object.values(error).some((err) => err)}
           type="submit"
-          className={`mb-2 text-white font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
-            ${
-              Object.values(error).some((err) => err)
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gray-900 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
-            }`}
+          className={`mb-2 text-white font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center
+    ${
+      Object.values(error).some((err) => err)
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-gray-900 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
+    }`}
         >
           Ingresar
         </button>
+        <div className="w-full">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginFailure}
+          />
+        </div>
       </form>
 
       <AlertModalLogin
