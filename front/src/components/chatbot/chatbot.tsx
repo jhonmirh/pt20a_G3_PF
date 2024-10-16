@@ -8,11 +8,11 @@ interface Landbot {
   Livechat: new (options: { configUrl: string }) => void;
 }
 
-// Extiende la interfaz Window para incluir myLandbot y Landbot
+
 declare global {
   interface Window {
-    myLandbot?: any; // o especificar un tipo más específico si es conocido
-    Landbot: Landbot; // asegúrate de que esto coincide con la definición del script
+    myLandbot?: any; 
+    Landbot: Landbot; 
   }
 }
 
