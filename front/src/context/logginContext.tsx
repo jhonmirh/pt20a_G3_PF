@@ -23,12 +23,12 @@ export interface LogginProviderProps {
   children: React.ReactNode;
 }
 
-// Proveedor de contexto
+
 export const LogginProvider: React.FC<LogginProviderProps> = ({ children }) => {
   const [userData, setUserData] = useState<userSession | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
 
-  // Efecto para almacenar datos de usuario en localStorage cuando cambian
+
   useEffect(() => {
     if (userData) {
       localStorage.setItem(
@@ -38,20 +38,19 @@ export const LogginProvider: React.FC<LogginProviderProps> = ({ children }) => {
     }
   }, [userData]);
 
-  // Efecto para cargar datos del localStorage cuando el componente se monta
+
   useEffect(() => {
     const storedUserData = localStorage.getItem("sessionStart");
     if (storedUserData) {
       try {
         const parsedData = JSON.parse(storedUserData);
-        setUserData(parsedData); // Asegúrate de que parsedData contenga todos los campos necesarios
+        setUserData(parsedData); 
       } catch (error) {
         console.error("Error parsing session data:", error);
         setUserData(null);
       }
     }
   }, []);
-  
 
   return (
     <LogginContext.Provider
