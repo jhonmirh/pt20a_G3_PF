@@ -7,6 +7,7 @@ import Footer from "@/components/Footer/Footer";
 import ShowComponent from "@/components/ShowComponent/ShowComponent";
 import "./globals.css";
 import AsideList from "@/components/AsideList/AsideList";
+import Chatbot from "@/components/chatbot/chatbot"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,6 +62,7 @@ export default async function RootLayout({
           <div className="flex-1 flex justify-center">{children}</div>
 
           {/* El footer se muestra en todas las páginas */}
+          <Chatbot />
           <Footer />
         </LogginProvider>
       </body>
