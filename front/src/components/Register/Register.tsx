@@ -6,7 +6,10 @@ import React, { useEffect, useState } from "react";
 import AlertModal from "../Alert/AlertModal";
 import { validateRegisterLogin } from "@/helpers/validators";
 
+export const dynamic = 'force-dynamic';
 const Register = () => {
+
+
   const startState: IRegister = {
     name: "",
     email: "",
@@ -80,19 +83,21 @@ const Register = () => {
 
     try {
       const response = await registerUser(dataUser);
-      console.log("Usuario Registrado Ingresa con tus Datos:", response);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      console.log("Usuario Registrado:", response);
       setModalContent({
         title: "Éxito",
-        message: "Usuario registrado satisfactoriamente. Por favor, inicia sesión.",
+        message: "Usuario registrado satisfactoriamente.",
       });
       setShowModal(true);
-      setTimeout(() => {
-        handleCloseModal();
-      }, 5000);
     } catch (error: any) {
-      console.error(error);
-      const errorMessage = error.message || "Se produjo un error inesperado durante el registro.";
-      setModalContent({ title: "Error", message: errorMessage });
+      console.error("Error durante el registro:", error);
+      setModalContent({
+        title: "Error",
+        message: error.message || "Se produjo un error inesperado.",
+      });
       setShowModal(true);
     }
   };
