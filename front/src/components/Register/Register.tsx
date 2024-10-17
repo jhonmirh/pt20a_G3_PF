@@ -103,12 +103,11 @@ const Register = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const newValue = name === "age" || name === "phone" ? (value ? Number(value) : "") : value;
-
+  
     setData((prevState) => ({
       ...prevState,
       [name]: newValue,
     }));
-
     // Update the errors based on current input
     const updatedErrors = validateRegisterLogin({
       ...dataUser,
