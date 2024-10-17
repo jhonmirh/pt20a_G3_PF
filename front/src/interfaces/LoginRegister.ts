@@ -81,4 +81,23 @@ export interface userSession {
         admin: boolean;
         orders: IOrder[];
     }
+
+
+
+    
+    
+}
+
+export type TCompleteProfileError = {
+    address?: string;
+    phone?: string;
+    age?: string;  
+    city?:string;
+}
+
+export interface ICompleteProfile {
+    age: number;
+    phone: number;
+    city: string;
+    address: string;
 }
