@@ -44,6 +44,7 @@ const AppList: React.FC = () => {
       await updateAppointment(updatedAppointment.id, {
         description: updatedAppointment.description,
         date: updatedAppointment.date,
+        status: updatedAppointment.status, // Include status here
       });
       setAppointments((prev) =>
         prev.map((app) =>
