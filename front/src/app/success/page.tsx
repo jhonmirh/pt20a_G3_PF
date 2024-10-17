@@ -72,12 +72,17 @@
 
 // export default Success;
 // app/success/page.tsx
+// app/success/page.tsx
+
 import SuccessClient from "@/components/Success/Success";
+
+export const dynamic = 'force-dynamic'; // Desactiva el prerenderizado estático
 
 export default function SuccessPage() {
   return (
     <div>
-      <SuccessClient />
+      <SuccessClient /> {/* Componente que manejará la lógica del cliente */}
     </div>
   );
 }
+

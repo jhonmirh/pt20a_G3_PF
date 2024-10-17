@@ -8,12 +8,6 @@ import { IAppointmentData } from "@/interfaces/Appointment";
 import Modal from "@/components/Pagado/Pagado";
 import { useLoggin } from "@/context/logginContext";
 
-interface IUpdateAppointment {
-  description: string;
-  date: string;
-  status?: "Pendiente" | "Procesado" | "Pagado";
-}
-
 const SuccessClient: React.FC = () => {
   const { userData } = useLoggin();
   const [appointment, setAppointment] = useState<IAppointmentData | null>(null);
@@ -23,6 +17,12 @@ const SuccessClient: React.FC = () => {
   const appointmentId = typeof window !== 'undefined' ? localStorage.getItem("activeAppointmentId") : null;
 
   useEffect(() => {
+    if (!appointmentId) {
+      // Redirige si falta appointmentId
+      router.push('/appointments');
+      return;
+    }
+
     const fetchAppointment = async () => {
       if (appointmentId && userData?.userData?.id) {
         try {
@@ -47,7 +47,7 @@ const SuccessClient: React.FC = () => {
     };
 
     fetchAppointment();
-  }, [appointmentId, userData?.userData?.id]);
+  }, [appointmentId, userData?.userData?.id, router]);
 
   const handleCloseModal = () => {
     setModalVisible(false);
