@@ -1,12 +1,12 @@
 import React from "react";
 import Card from "../Card/Card";
-import CardList from "../CardList/CardList";
+
 
 const HomeContainer = () => {
   return (
     <div>
      
-      {/* <CardList /> */}
+      CRISTO VIENE PRONTO
     </div>
   );
 };
