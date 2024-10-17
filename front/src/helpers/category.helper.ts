@@ -10,11 +10,11 @@ export const deleteCategory = async (id: string, token?: string) => {
     });
   
     if (!response.ok) {
-      const errorData = await response.json(); // Obtener el mensaje de error del servidor
+      const errorData = await response.json();
       throw new Error(errorData.message || "Error al eliminar la categoría");
     }
     
-    // Puedes agregar lógica adicional aquí, como mostrar una notificación
+  
   };
   
 
@@ -28,7 +28,7 @@ export const deleteCategory = async (id: string, token?: string) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Asegúrate de incluir el token si es necesario
+        Authorization: `Bearer ${token}`, 
       },
       body: JSON.stringify(data),
     });
@@ -36,13 +36,12 @@ export const deleteCategory = async (id: string, token?: string) => {
     if (!response.ok) {
       throw new Error("Error al actualizar la categoría");
     }
-  
-    // Aquí asumiendo que la respuesta contiene la categoría actualizada
-    const updatedCategory: ICategory = await response.json(); // Parsear la respuesta JSON
+
+    const updatedCategory: ICategory = await response.json(); 
    console.log('====================================');
    console.log(response.json);
    console.log('====================================');
-    return updatedCategory; // Devolver la categoría actualizada
+    return updatedCategory;
   };
   
 

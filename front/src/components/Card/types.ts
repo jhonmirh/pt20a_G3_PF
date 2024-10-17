@@ -2,7 +2,7 @@ interface CardsProps {
     id: string;
     name: string;
     description: string;
-    price: number;
+    price: string;
     image: string;
     categoryId: string;
   }
