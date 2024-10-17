@@ -6,14 +6,14 @@ import React, { useEffect, useState } from "react";
 import AlertModal from "@/components/Alert/AlertModal";
 
 // Validation functions
-export function validatePassword(password: string): string | undefined {
+function validatePassword(password: string): string | undefined {
     if (password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
         return "El password debe contener al menos un carácter especial, un número, una letra mayúscula y una letra minúscula y tener al menos ocho caracteres.";
     }
     return undefined; 
 }
 
-export function validateLogin(values: ILogin): ILoginError {
+function validateLogin(values: ILogin): ILoginError {
     const errors: ILoginError = {};
     if (!values.email) {
         errors.email = "Email es Requerido.";
@@ -22,8 +22,7 @@ export function validateLogin(values: ILogin): ILoginError {
     }
     return errors;
 }
-
-export function validateRegisterLogin(values: IRegister): TRegisterError {
+function validateRegisterLogin(values: IRegister): TRegisterError {
     const errors: TRegisterError = {};
     
     if (!values.email) {
