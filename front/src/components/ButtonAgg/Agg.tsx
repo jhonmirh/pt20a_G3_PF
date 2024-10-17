@@ -1,34 +1,29 @@
-
 'use client'
 
 import React, { useState } from "react";
-import AlertModal from "../Alert/AlertModal";
+import AlertModal from "../Alert/AlertModal"; 
 import { useRouter } from "next/navigation";
 import ICategory from "@/interfaces/Category";
 
-const Agg = ({ category }: { category: ICategory }) => {
+const Agg: React.FC<{ category: ICategory }> = ({ category }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
   const router = useRouter();
 
   const handleClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
 
     try {
       const appointmentIds: string[] = JSON.parse(localStorage.getItem("appointment") || "[]");
-
-      
       const isProductInAppointment = appointmentIds.includes(category.id);
 
       if (isProductInAppointment) {
-        
         setModalContent({
           title: "Revisa tus Citas",
           message: "El Servicio Tiene Citas Pendientes",
         });
         setShowModal(true);
       } else {
-        
         router.push(`/appointment?categoryId=${category.id}`);
       }
     } catch (error) {
@@ -54,8 +49,8 @@ const Agg = ({ category }: { category: ICategory }) => {
         Agregar Cita
       </button>
       <AlertModal
-        show={showModal}
-        onClose={handleCloseModal}
+        showModal={showModal}
+        handleClose={handleCloseModal}
         title={modalContent.title}
         message={modalContent.message}
       />
