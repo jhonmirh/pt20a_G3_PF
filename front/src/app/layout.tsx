@@ -67,13 +67,13 @@ export default async function RootLayout({
               <div className="flex flex-col items-center mb-4">
                 <AsideList />
               </div>
+            <Chatbot />
             </ShowComponent>
 
             {/* Siempre mostrar el contenido principal */}
             <div className="flex-1 flex justify-center">{children}</div>
 
             {/* El footer se muestra en todas las páginas */}
-            <Chatbot />
             <Footer />
           </LogginProvider>
         </GoogleOAuthProvider>

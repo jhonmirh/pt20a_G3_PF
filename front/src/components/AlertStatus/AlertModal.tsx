@@ -5,7 +5,7 @@ interface AlertModalProps {
   handleClose: () => void;
   title: string;
   message: string;
-  children?: React.ReactNode; // Agrega esta línea
+  children?: React.ReactNode; 
 }
 
 const AlertStatus: React.FC<AlertModalProps> = ({ showModal, handleClose, title, message, children }) => {
@@ -17,7 +17,7 @@ const AlertStatus: React.FC<AlertModalProps> = ({ showModal, handleClose, title,
         <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
         <p className="text-lg text-gray-600 mb-6">{message}</p>
         <div className="flex justify-end space-x-4">
-          {children} {/* Renderiza los children aquí */}
+          {children}
         </div>
       </div>
     </div>
