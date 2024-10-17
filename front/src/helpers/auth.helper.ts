@@ -4,7 +4,7 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL
 
 export async function registerUser(userData: IRegister) {
   try {
-      const res = await fetch(`http://localhost:3010/users/register`, {
+      const res = await fetch(`${APIURL}/users/register`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export async function registerUser(userData: IRegister) {
 
 export async function loginUser(userData: ILogin) {
     try {
-        const res = await fetch(`http://localhost:3010/users/login`, {
+        const res = await fetch(`${APIURL}/users/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
