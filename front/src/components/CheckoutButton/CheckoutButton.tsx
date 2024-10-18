@@ -35,7 +35,7 @@ const CheckoutButton = ({ appointment }: { appointment: IAppointmentData }) => {
       body: JSON.stringify({
         appointmentId: appointment.id,
         description: appointment.description,
-        unitAmount: appointment.price * 100,
+        unitAmount: appointment.category.price,
         quantity: 1,
       }),
     });

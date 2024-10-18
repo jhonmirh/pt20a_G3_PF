@@ -9,7 +9,10 @@ const stripe = new Stripe('sk_test_51Q7otE00ffkRUeeSNKqMZLAVvxk5Eb0hwkkw7cVVYWiW
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { appointmentId, description, unitAmount, quantity } = body; // Extraer los datos recibidos desde el front-end
+    const { appointmentId, description, unitAmount, quantity } = body;
+
+    // Verifica que el valor esté en centavos (número entero)
+    const unitAmountInCents = Math.round(unitAmount * 100); // Asegura que está en centavos
 
     // Crear la sesión de Stripe con los detalles recibidos
     const session = await stripe.checkout.sessions.create({
@@ -18,11 +21,11 @@ export async function POST(request: Request) {
       line_items: [
         {
           price_data: {
-            currency: 'usd', // Cambia la moneda si es necesario
+            currency: 'usd',
             product_data: {
-              name: description, // Agregar la descripción personalizada aquí
+              name: description,
             },
-            unit_amount: unitAmount.toString(), // El precio en centavos (por ejemplo, 5000 es $50.00)
+            unit_amount: unitAmountInCents, // Enviar el valor en centavos
           },
           quantity: quantity,
         },

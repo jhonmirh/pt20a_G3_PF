@@ -99,6 +99,11 @@ const AppList: React.FC = () => {
             </div>
             <div className="text-gray-700">
               <p>
+                <strong>Categoría:</strong> {appointment.category.price}
+              </p>
+            </div>
+            <div className="text-gray-700">
+              <p>
                 <strong>Estado de tu Cita:</strong> {appointment.status}
               </p>
             </div>

@@ -51,7 +51,7 @@ const AppointmentForm = () => {
       };
 
       const categoryObject = {
-        id: appointmentData.categoryId,
+        id: appointmentData.category.id,
         name: "",
         price: 0,
       };
@@ -61,7 +61,8 @@ const AppointmentForm = () => {
         status: appointmentData.status,
         description: appointmentData.description,
         user: userData?.userData?.id || "",
-        categoryId: appointmentData.categoryId,
+        categoryId: appointmentData.category.id,
+        categoryPrice:appointmentData.category.price,
         userId: userIdObject,
         category: categoryObject,
       };

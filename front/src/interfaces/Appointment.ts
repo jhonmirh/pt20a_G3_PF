@@ -11,6 +11,7 @@ export interface UserProps {
 export interface CategoryProps {
   id: string;
   name: string;
+  price:number;
 }
 
 
@@ -38,5 +39,4 @@ export default interface AppointmentProps {
   status:"Pendiente" | "Procesado" | "Pagado";
   user: UserProps; // También aquí debería ser un objeto UserProps
   category: CategoryProps;
-  categoryId: string;
 }
