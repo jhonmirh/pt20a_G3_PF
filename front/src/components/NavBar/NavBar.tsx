@@ -59,15 +59,16 @@ export default function NavBar({ images }: NavBarProps) {
         </Link>
 
         <div className="relative flex items-center w-full max-w-md">
-          <input
+          {/* <input
             type="text"
             placeholder="Search..."
             className="w-full p-2 pr-10 rounded border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-          <button
+          /> */}
+          <h1 className="text-white">SERVICIOS TECNOLÓGICOS INTEGRALES JHONDAY</h1>
+          {/* <button
             onClick={handleSearch}
             className="absolute right-1 top-1/2 transform -translate-y-1/2 p-1 rounded hover:bg-blue-500"
             title="Search"
@@ -86,7 +87,7 @@ export default function NavBar({ images }: NavBarProps) {
                 d="M21 21l-4.35-4.35m2.15-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
 
         <nav className="flex items-center space-x-6">

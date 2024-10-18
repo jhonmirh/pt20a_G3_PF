@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect, useState } from "react";
 import {
@@ -109,7 +109,9 @@ const AppList: React.FC = () => {
               >
                 Modificar
               </button>
-              <CheckoutButton appointment={appointment} />
+              {appointment.status !== "Pagado" && (
+                <CheckoutButton appointment={appointment} />
+              )}
             </div>
           </div>
         ))}
