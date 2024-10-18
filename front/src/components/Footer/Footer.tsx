@@ -22,7 +22,19 @@ const Footer = () => {
             </span>
           </div>
           <div className="mb-6 md:mb-0 md:w-[350px]">
-            <FooterMap /> {/* Componente de mapa integrado aquí */}
+            <FooterMap />
+            <h1
+              style={{
+                fontSize: "1em",
+                color: "white",
+                textAlign: "center",
+                fontFamily: "Arial, sans-serif",
+                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
+              }}
+            >
+              Calle 0 con carrera 2, esquina, Abejales, Estado Táchira,
+              Venezuela
+            </h1>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
@@ -140,10 +152,7 @@ const Footer = () => {
                 />
               </svg>
             </a>
-            <a
-              href="#"
-              className= "text-white hover:text-blue-500"
-            >
+            <a href="#" className="text-white hover:text-blue-500">
               <svg
                 className="w-10 h-10"
                 fill="currentColor"
