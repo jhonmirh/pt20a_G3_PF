@@ -1,5 +1,5 @@
 'use client'
-import { ILogin, ILoginError, IRegister, TRegisterError } from "@/interfaces/LoginRegister";
+import { ICompleteProfile, ILogin, ILoginError, IRegister, TCompleteProfileError, TRegisterError } from "@/interfaces/LoginRegister";
 
 
 export function validatePassword(password: string): string | undefined {
@@ -72,4 +72,28 @@ export function validateRegisterLogin(values: IRegister): TRegisterError {
 
     return errors;
 }
-
+export function validateCompleteProfile(values: ICompleteProfile): TCompleteProfileError {
+    const errors: TCompleteProfileError = {};
+    
+    if (values.phone === undefined) {
+        errors.phone = "Número Telefónico es Requerido.";
+    } else if (typeof values.phone !== 'number' || !/^\d{10}$/.test(values.phone.toString())) {
+        errors.phone = "El número de teléfono debe ser numérico y tener 10 dígitos.";
+    }
+    if (values.age === undefined || values.age === null) {
+        errors.age = "Edad es Requerido.";
+    } else if (typeof values.age !== 'number' || values.age < 18 || values.age > 99 || !/^\d{2}$/.test(values.age.toString())) {
+        errors.age = "La edad debe ser un número de dos dígitos mayor o igual a 18";
+    }
+    if (!values.city) {
+        errors.city = "Ciudad es Requerido.";
+    } else if (!/^[a-zA-Z]{3,30}$/.test(values.city)) {
+        errors.city = "La ciudad debe contener sólo letras y tener entre 3 y 30 caracteres.";
+    }
+    if (!values.address) {
+        errors.address = "Dirección es Requerido.";
+    } else if (!/^[a-zA-Z0-9\s\.,_-áéíóúÁÉÍÓÚñÑ]{3,30}$/.test(values.address)) {
+        errors.address = "La dirección debe contener entre 3 y 30 caracteres";
+    }
+    return errors;
+}

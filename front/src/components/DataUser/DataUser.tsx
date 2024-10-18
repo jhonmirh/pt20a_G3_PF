@@ -14,6 +14,22 @@ const DataUser = () => {
     message: "",
   });
 
+
+  // Función para verificar si todos los datos están completos
+  const isUserDataComplete = () => {
+    return userData && 
+      userData.userData?.name && 
+      userData.userData?.email && 
+      userData.userData?.age && 
+      userData.userData?.phone && 
+      userData.userData?.city && 
+      userData.userData?.address;
+  };
+
+  useEffect(() => {
+    console.log("User Data:", userData);
+  }, [userData]);
+
   useEffect(() => {
     if (!userData?.token) {
       setModalContent({
@@ -21,15 +37,21 @@ const DataUser = () => {
         message: "Debe estar Logueado para Acceder a Este Espacio",
       });
       setShowModal(true);
+    }else if (!isUserDataComplete()) {
+      setModalContent({
+        title: "Datos incompletos",
+        message: "Debes completar tus datos para ver tu perfil.",
+      });
+      setShowModal(true);
     }
   }, [userData]);
 
   const handleCloseModal = () => {
     setShowModal(false);
-    router.push("/login"); 
+    router.push(userData ? "/completar-perfil" :"/login"); 
   };
 
-  if (!userData?.token) {
+  if (!userData || !isUserDataComplete()) {
     return (
       <AlertModal
         showModal={showModal}

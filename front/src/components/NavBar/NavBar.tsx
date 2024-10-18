@@ -4,7 +4,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { NavBarProps } from "./types";
 import { useRouter } from "next/navigation";
 import { useLoggin } from "@/context/logginContext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SignOutConfirmation from "../SignOutConfirmation/SignOutConfirmation";
@@ -26,10 +26,12 @@ export default function NavBar({ images }: NavBarProps) {
     const { age, phone, address, city } = userData.userData;
     return age && phone && address && city;
   };
+
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Previene el comportamiento predeterminado de <Link>
 
     if (!isProfileComplete()) {
+      alert("Debes completar tu perfil antes de continuar.");
       // Si el perfil no está completo, redirige a /completar-perfil
       router.push("/completar-perfil");
     } else {
@@ -50,11 +52,18 @@ export default function NavBar({ images }: NavBarProps) {
       router.push(`/search?query=${searchTerm}`);
     }
   };
+  
+  useEffect(() => {
+    if (!isProfileComplete()) {
+      // Redirige al usuario a la página de completar perfil si no lo ha hecho
+      router.push("/completar-perfil");
+    }
+  }, [userData]);
 
   return (
     <header className="relative bg-gray-900 shadow-md w-full">
       <div className="flex justify-between items-center p-4">
-        <Link href="/">
+        <Link href="#" onClick={handleLogoClick}>
           <Image src="/logo-JhonDay3.png" alt="Logo" width={50} height={50} />
         </Link>
 

@@ -29,7 +29,7 @@ export function validateRegisterLogin(values: IRegister): TRegisterError {
     if (!values.email) {
         errors.email = "Email es Requerido.";
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-        errors.email = "Invalid email address.";
+        errors.email = "Email inválido.";
     }
 
     if (!values.password) {
@@ -202,6 +202,7 @@ const Register = () => {
             value={dataUser.email}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.email ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="example@mail.com"
             required
           />
           {isSubmitted && error.email && (
@@ -223,6 +224,7 @@ const Register = () => {
             value={dataUser.name}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.name ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Nombre y apellido"
             required
           />
           {isSubmitted && error.name && (
@@ -244,6 +246,7 @@ const Register = () => {
             value={dataUser.age}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.age ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Sólo números mayores que 18"
             required
           />
           {isSubmitted && error.age && (
@@ -265,6 +268,7 @@ const Register = () => {
             value={dataUser.phone}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.phone ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Ingresar 10 caracteres"
             required
           />
           {isSubmitted && error.phone && (
@@ -286,6 +290,7 @@ const Register = () => {
             value={dataUser.city}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.city ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="En qué ciudad vives"
             required
           />
           {isSubmitted && error.city && (
@@ -307,6 +312,7 @@ const Register = () => {
             value={dataUser.address}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.address ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Tu dirección completa Estado Calle Carrera..."
             required
           />
           {isSubmitted && error.address && (
@@ -328,6 +334,7 @@ const Register = () => {
             value={dataUser.password}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.password ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Ejemplo*1"
             required
           />
           <button type="button" onClick={toggleShowPassword}>
@@ -352,6 +359,7 @@ const Register = () => {
             value={dataUser.passwordConfirm}
             onChange={handleChange}
             className={`border-2 w-full p-2 rounded-md focus:outline-none ${error.passwordConfirm ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Ejemplo*1"
             required
           />
           <button type="button" onClick={toggleShowPasswordConfirm}>
