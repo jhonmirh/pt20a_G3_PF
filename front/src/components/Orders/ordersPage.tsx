@@ -5,8 +5,6 @@ import { getAppointments, updateAppointment } from "@/helpers/appointment.helper
 import { useLoggin } from "@/context/logginContext";
 import EditAppointmentForm from "../EditAppointment/EditAppointmentForm";
 import AppointmentProps from "@/interfaces/Appointment";
-
-
 const ProcessedAppointments: React.FC = () => {
   const { userData } = useLoggin();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
