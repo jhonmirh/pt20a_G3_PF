@@ -26,6 +26,7 @@ export interface userSession {
         name: string;
         email: string;
         phone: string;
+        city:string;
         ordes:[]
     }
 }

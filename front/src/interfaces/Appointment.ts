@@ -28,7 +28,7 @@ export interface IAppointmentData {
   };
 }
 
-// interfaces/Appointment.ts
+
 
 
 export default interface AppointmentProps {

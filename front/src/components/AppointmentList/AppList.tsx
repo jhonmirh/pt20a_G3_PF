@@ -22,11 +22,11 @@ const AppList: React.FC = () => {
     const fetchAppointments = async () => {
       try {
         if (userData?.userData.id) {
-          const data: AppointmentProps[] = await getAppointments(userData.userData.id);
+          const data: AppointmentProps[] = await getAppointments(userData.userData.id); // Asegúrate de que data tenga el tipo correcto
 
-          
+          // Filtra las citas para excluir aquellas con estado "Procesado"
           const filteredAppointments = data.filter(
-            (appointment: AppointmentProps) => appointment.status !== "Procesado" 
+            (appointment: AppointmentProps) => appointment.status !== "Procesado" // Define el tipo aquí
           );
           setAppointments(filteredAppointments);
         }
