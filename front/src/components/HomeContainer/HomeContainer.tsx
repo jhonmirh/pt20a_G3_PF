@@ -6,7 +6,7 @@ const HomeContainer = () => {
   return (
     <div>
      
-      CRISTO VIENE PRONTO
+      
     </div>
   );
 };
