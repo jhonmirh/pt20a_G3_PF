@@ -8,7 +8,7 @@ import { validateCompleteProfile } from '@/helpers/validate';
 
 
 const CompleteProfile: React.FC = () => {
-    const { setUserData } = useLoggin();
+    const { userData, setUserData } = useLoggin();
     const [age, setAge] = useState(0);
     const [phone, setPhone] = useState(0);
     const [address, setAddress] = useState('');
@@ -20,7 +20,7 @@ const CompleteProfile: React.FC = () => {
     const [isProfileUpdated, setIsProfileUpdated] = useState(false);
     const router = useRouter();    
 
-    // Valida los campos en tiempo real
+
     const handleFieldChange = (field: keyof TCompleteProfileError, value: any) => {
         let updatedValue = { age, phone, address, city };
         
