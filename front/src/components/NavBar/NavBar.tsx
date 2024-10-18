@@ -29,15 +29,15 @@ export default function NavBar({ images }: NavBarProps) {
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Previene el comportamiento predeterminado de <Link>
-
-    if (!isProfileComplete()) {
-      alert("Debes completar tu perfil antes de continuar.");
-      // Si el perfil no está completo, redirige a /completar-perfil
-      router.push("/completar-perfil");
-    } else {
-      // Si el perfil está completo, redirige a la página principal
-      router.push("/");
-    }
+    router.push("/");
+    // if (!isProfileComplete()) {
+    //   alert("Debes completar tu perfil antes de continuar.");
+    //   // Si el perfil no está completo, redirige a /completar-perfil
+    //   router.push("/");
+    // } else {
+    //   // Si el perfil está completo, redirige a la página principal
+    //   router.push("/");
+    // }
   };
   
   const confirmSignOut = () => {

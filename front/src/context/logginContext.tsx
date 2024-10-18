@@ -128,7 +128,7 @@
 
 // // Hook personalizado para usar el contexto en los componentes
 // export const useLoggin = () => useContext(LogginContext);
-
+"use client"
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
