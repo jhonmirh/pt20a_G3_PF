@@ -25,7 +25,10 @@ const AppointmentForm = () => {
       address: userData?.userData?.address || "",
       city: userData?.userData?.city || "",
     },
-    categoryId: categoryId,
+    category: {
+      id: "",
+      price: 0,
+    },
   };
 
   const [appointmentData, setAppointmentData] =
@@ -68,11 +71,9 @@ const AppointmentForm = () => {
       setAlertContent({ title: "Éxito", message: "Cita creada con éxito." });
       setShowSuccessModal(true);
 
-     
       setTimeout(() => {
         router.push("/appointments");
-      }, 4000); 
-
+      }, 4000);
     } catch (error) {
       console.error("Error creando la cita:", error);
       setAlertContent({ title: "Error", message: "Error creando la cita." });
@@ -126,14 +127,12 @@ const AppointmentForm = () => {
         </button>
       </div>
 
-
       <AlertModal
         showModal={showSuccessModal}
         handleClose={() => setShowSuccessModal(false)}
         title={alertContent.title}
         message={alertContent.message}
       />
-
 
       <AlertModal
         showModal={showAlert}

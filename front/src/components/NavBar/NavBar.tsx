@@ -240,8 +240,8 @@ export default function NavBar({ images }: NavBarProps) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={confirmSignOut}
-        title="Sign Out"
-        message="Are you sure you want to log out?"
+        title="Cerrar Sesión"
+        message="Estas Seguro de Cerrar tu Sesión?"
       />
     </header>
   );

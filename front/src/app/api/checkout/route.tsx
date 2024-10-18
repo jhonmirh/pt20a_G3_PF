@@ -22,7 +22,7 @@ export async function POST(request: Request) {
             product_data: {
               name: description, // Agregar la descripción personalizada aquí
             },
-            unit_amount: unitAmount, // El precio en centavos (por ejemplo, 5000 es $50.00)
+            unit_amount: unitAmount.toString(), // El precio en centavos (por ejemplo, 5000 es $50.00)
           },
           quantity: quantity,
         },

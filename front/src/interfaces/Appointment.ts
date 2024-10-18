@@ -21,7 +21,10 @@ export interface IAppointmentData {
   price:number;
   status:"Pendiente" | "Procesado" | "Pagado";
   user: UserProps; 
-  categoryId: string;
+  category: {
+    id: string;
+    price: number; // Asegúrate de que el precio esté en la categoría
+  };
 }
 
 // interfaces/Appointment.ts
