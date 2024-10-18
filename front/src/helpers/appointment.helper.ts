@@ -3,10 +3,10 @@ import { IAppointmentData } from "@/interfaces/Appointment";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL
 
-export async function createAppointment(data: { date: string; description: string; user: string; categoryId: string }) {
+export async function createAppointment(data: { date: string; description: string; user: string; categoryId: string, categoryPrice:number}) {
     console.log(data)
     try {
-        const response = await fetch('http://localhost:3010/appointments', {
+        const response = await fetch(`${APIURL}/appointments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

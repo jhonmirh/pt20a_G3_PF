@@ -51,21 +51,21 @@ const AppointmentForm = () => {
       };
 
       const categoryObject = {
-        id: appointmentData.category.id,
+        id: categoryId || appointmentData.category.id,  // Asegúrate de asignar categoryId aquí
         name: "",
-        price: 0,
-      };
+        price: appointmentData.category.price,
+    };
 
-      const appointmentPayload = {
-        date: appointmentData.date,
-        status: appointmentData.status,
-        description: appointmentData.description,
-        user: userData?.userData?.id || "",
-        categoryId: appointmentData.category.id,
-        categoryPrice:appointmentData.category.price,
-        userId: userIdObject,
-        category: categoryObject,
-      };
+    const appointmentPayload = {
+      date: appointmentData.date,
+      status: appointmentData.status,
+      description: appointmentData.description,
+      user: userData?.userData?.id || "",
+      categoryId: categoryId || appointmentData.category.id,  // Asegúrate de asignar el categoryId
+      categoryPrice: appointmentData.category.price,
+      userId: userIdObject,
+      category: categoryObject,
+  };
 
       const newAppointment = await createAppointment(appointmentPayload);
       console.log("Cita creada:", newAppointment);
