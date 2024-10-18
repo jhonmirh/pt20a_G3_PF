@@ -1,10 +1,10 @@
-"use client";
+"use client"; 
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { NavBarProps } from "./types";
 import { useRouter } from "next/navigation";
 import { useLoggin } from "@/context/logginContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SignOutConfirmation from "../SignOutConfirmation/SignOutConfirmation";
@@ -21,11 +21,11 @@ export default function NavBar({ images }: NavBarProps) {
     setIsModalOpen(true);
   };
 
-  const isProfileComplete = () => {
+  const isProfileComplete = useCallback(() => {
     if (!userData || !userData.userData) return false;
     const { age, phone, address, city } = userData.userData;
     return age && phone && address && city;
-  };
+  }, [userData]);
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Previene el comportamiento predeterminado de <Link>
@@ -39,6 +39,7 @@ export default function NavBar({ images }: NavBarProps) {
       router.push("/");
     }
   };
+  
   const confirmSignOut = () => {
     localStorage.removeItem("sessionStart");
     setUserData(null);
@@ -58,7 +59,7 @@ export default function NavBar({ images }: NavBarProps) {
       // Redirige al usuario a la página de completar perfil si no lo ha hecho
       router.push("/completar-perfil");
     }
-  }, [userData]);
+  }, [userData, isProfileComplete, router]); // Agrega las dependencias aquí
 
   return (
     <header className="relative bg-gray-900 shadow-md w-full">
@@ -169,7 +170,7 @@ export default function NavBar({ images }: NavBarProps) {
                           <Link
                             href="/dashboard/profiles"
                             className={`${
-                              active ? "bg-blue-500 text-white" : "text-white"
+                              active ? "bg-gray-500 text-white" : "text-white"
                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                           >
                             Perfil
@@ -181,7 +182,7 @@ export default function NavBar({ images }: NavBarProps) {
                           <Link
                             href="/dashboard/orders"
                             className={`${
-                              active ? "bg-blue-500 text-white" : "text-white"
+                              active ? "bg-gray-500 text-white" : "text-white"
                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                           >
                             Turnos

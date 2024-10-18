@@ -22,8 +22,13 @@ const AppList: React.FC = () => {
     const fetchAppointments = async () => {
       try {
         if (userData?.userData.id) {
-          const data = await getAppointments(userData.userData.id);
-          setAppointments(data);
+          const data: AppointmentProps[] = await getAppointments(userData.userData.id);
+
+          
+          const filteredAppointments = data.filter(
+            (appointment: AppointmentProps) => appointment.status !== "Procesado" 
+          );
+          setAppointments(filteredAppointments);
         }
       } catch (err: any) {
         setError(err.message);
@@ -44,7 +49,7 @@ const AppList: React.FC = () => {
       await updateAppointment(updatedAppointment.id, {
         description: updatedAppointment.description,
         date: updatedAppointment.date,
-        status: updatedAppointment.status, // Include status here
+        status: updatedAppointment.status,
       });
       setAppointments((prev) =>
         prev.map((app) =>
@@ -99,7 +104,7 @@ const AppList: React.FC = () => {
             </div>
             <div className="text-gray-700">
               <p>
-                <strong>Categoría:</strong> {appointment.category.price}
+                <strong>Precio:</strong> {appointment.category.price}
               </p>
             </div>
             <div className="text-gray-700">

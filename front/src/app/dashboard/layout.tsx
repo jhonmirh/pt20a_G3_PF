@@ -7,10 +7,8 @@ export default function DashboardLayout({
 }) {
   return (
     <section className="flex flex-col items-center min-h-screen py-8">
-      {/* Tarjeta con fondo blanco transparente, bordes redondeados y sombra */}
       <div className="w-full max-w-4xl p-6 bg-white bg-opacity-80 rounded-lg shadow-lg shadow-gray-900">
-        
-        {/* Menú de navegación centrado */}
+
         <nav className="flex justify-center space-x-4 mb-4">
           <Link
             href="/dashboard/profiles"
@@ -27,7 +25,6 @@ export default function DashboardLayout({
         </nav>
       </div>
 
-      {/* Contenido dinámico */}
       <div>{children}</div>
     </section>
   );

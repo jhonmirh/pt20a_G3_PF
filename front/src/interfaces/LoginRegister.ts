@@ -27,13 +27,12 @@ export interface IUsersUpdate {
     id: string;
     name: string;
     email: string;
-    phone: number;  // Cambia a `number`
     age: number;
+    password: string;
+    phone: number;  // Asegúrate de que sea number
     address: string;
     city: string;
-    password: string;
-    passwordConfirm?: string;
-    admin?: boolean;
+    admin: boolean;
     appointments?: IAppointmentData[];
   }
   
@@ -67,7 +66,7 @@ export interface IOrder {
     };
 }
 
-export interface userSession {
+export interface UserSession {
     token: string;
     userData: {
         id: string;
@@ -75,18 +74,17 @@ export interface userSession {
         email: string;
         age: number;
         password: string;
-        phone: string;
+        phone: number; // Cambia a number aquí
         address: string;
         city: string;
         admin: boolean;
-        orders: IOrder[];
-    }
-
-
-
-    
-    
+    };
 }
+
+
+    
+    
+
 
 export type TCompleteProfileError = {
     address?: string;

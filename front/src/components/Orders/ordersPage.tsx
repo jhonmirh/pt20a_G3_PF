@@ -1,123 +1,126 @@
 "use client";
 
-import React, { useEffect, useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { getAppointments, updateAppointment } from "@/helpers/appointment.helper";
 import { useLoggin } from "@/context/logginContext";
-import { getOrders } from "@/helpers/orders.helper";
-import { IOrder } from "@/interfaces/LoginRegister";
-import Card from "../Card/Card";
-import AlertModal from "../Alert/AlertModal";
+import EditAppointmentForm from "../EditAppointment/EditAppointmentForm";
+import AppointmentProps from "@/interfaces/Appointment";
 
-const OrdersPage = () => {
+
+const ProcessedAppointments: React.FC = () => {
   const { userData } = useLoggin();
-  const router = useRouter();
-  const [orders, setOrders] = useState<IOrder[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({
-    title: "",
-    message: "",
-  });
-  console.log("====================================");
-  console.log(userData?.token);
-  console.log("====================================");
+  const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [editingAppointment, setEditingAppointment] = useState<AppointmentProps | null>(null);
+
   useEffect(() => {
-    if (!userData?.token) {
-      setModalContent({
-        title: "Acceso Denegado",
-        message: "Debe estar Logueado para Acceder a Este Espacio",
-      });
-      setShowModal(true);
-      console.log("Mostrando Modal: ", showModal); // Agregar para verificar el valor
-    }
-  }, [userData, showModal]);
+    const fetchAppointments = async () => {
+      try {
+        if (userData?.userData.id) {
+          const data: AppointmentProps[] = await getAppointments(userData.userData.id); // Asegúrate de que data sea de tipo AppointmentProps[]
+          
+          
+          const processedAppointments = data.filter((appointment: AppointmentProps) => appointment.status === "Procesado");
+          setAppointments(processedAppointments);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    router.push("/login");
-  };
-
-  const fetchData = useCallback(async () => {
-    if (!userData?.token) {
-      return;
-    }
-
-    try {
-      const ordersData = await getOrders(userData.token);
-      setOrders(ordersData);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
+    fetchAppointments();
   }, [userData]);
 
-  useEffect(() => {
-    if (userData) {
-      fetchData();
-    }
-  }, [fetchData, userData]);
+  const handleEditClick = (appointment: AppointmentProps) => {
+    setEditingAppointment(appointment);
+  };
 
-  if (!userData?.token) {
-    return (
-      <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModal}
-        title={modalContent.title}
-        message={modalContent.message}
-      />
-    );
-  }
+  const handleSave = async (updatedAppointment: AppointmentProps) => {
+    try {
+      await updateAppointment(updatedAppointment.id, {
+        description: updatedAppointment.description,
+        date: updatedAppointment.date,
+        status: updatedAppointment.status,
+      });
+      setAppointments((prev) =>
+        prev.map((app) =>
+          app.id === updatedAppointment.id ? updatedAppointment : app
+        )
+      );
+      setEditingAppointment(null);
+    } catch (err) {
+      console.error("Error updating appointment", err);
+    }
+  };
+
+  if (loading) return <p>Cargando citas...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="p-4">
-      <div className="flex flex-wrap gap-4">
-        {orders && orders.length > 0 ? (
-          orders.map((order) => (
-            <div
-              key={order.id}
-              className="bg-white border border-gray-200 rounded-lg shadow-lg shadow-green-800 dark:bg-green-800 dark:border-gray-700 p-4 w-full"
-            >
-              <h2 className="text-xl font-bold mb-2">Order ID: {order.id}</h2>
-              <p className="text-gray-700 dark:text-gray-200">
-                Order Date: {new Date(order.date).toLocaleDateString()}
-              </p>
-              <p className="text-gray-700 dark:text-gray-200">
-                Status: {order.status}
-              </p>
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">Products:</h3>
-                <div className="flex flex-wrap gap-4">
-                  {order.products.length > 0 ? (
-                    order.products.map((product) => (
-                      <div
-                        key={product.id}
-                        className="w-full sm:w-1/2 md:w-1/3 p-2"
-                      >
-                        <Card {...product} />
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-700 dark:text-gray-200">
-                      No products found
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="m-10 p-2 max-w-80 bg-white border border-gray-200 rounded-lg shadow-lg shadow-gray-800 dark:bg-gray-800 dark:border-gray-700">
-            <h1>No Tienes Citas Atendidas</h1>
-          </div>
-        )}
+    <div className="container mx-auto mt-5">
+      <div className="flex justify-center">
+        <div className="bg-white bg-opacity-80 p-2 max-w-md w-full rounded-lg shadow-lg text-center mb-2">
+          <h1 className="text-gray-900 font-bold text-2xl">Tus Citas Procesadas</h1>
+        </div>
       </div>
 
-      <AlertModal
-        showModal={showModal}
-        handleClose={handleCloseModal}
-        title={modalContent.title}
-        message={modalContent.message}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {appointments.map((appointment) => (
+          <div
+            key={appointment.id}
+            className="bg-white bg-opacity-80 border border-gray-900 rounded-lg shadow-lg p-6 hover:shadow-2xl transition-all transform hover:-translate-y-1"
+          >
+            <h2 className="text-xl font-semibold mb-3">
+              {appointment.description}
+            </h2>
+            <p className="text-gray-700 mb-2">
+              Fecha: {new Date(appointment.date).toLocaleString()}
+            </p>
+            <div className="text-gray-700 mb-2">
+              <p>
+                <strong>Usuario:</strong> {appointment.user.name}
+              </p>
+              <p>
+                <strong>Teléfono:</strong> {appointment.user.phone}
+              </p>
+              <p>
+                <strong>Dirección:</strong> {appointment.user.address}, {appointment.user.city}
+              </p>
+            </div>
+            <div className="text-gray-700">
+              <p>
+                <strong>Categoría:</strong> {appointment.category.name}
+              </p>
+            </div>
+            <div className="text-gray-700">
+              <p>
+                <strong>Precio:</strong> {appointment.category.price}
+              </p>
+            </div>
+            <div className="text-gray-700">
+              <p>
+                <strong>Estado de tu Cita:</strong> {appointment.status}
+              </p>
+            </div>
+            <div className="mt-4 flex space-x-3">
+             
+             
+            </div>
+          </div>
+        ))}
+      </div>
+      {editingAppointment && (
+        <EditAppointmentForm
+          appointment={editingAppointment}
+          onSave={handleSave}
+          onCancel={() => setEditingAppointment(null)}
+        />
+      )}
     </div>
   );
 };
 
-export default OrdersPage;
+export default ProcessedAppointments;
